@@ -53,6 +53,15 @@ function makeCategoryBanner(detections) {
 document.addEventListener('DOMContentLoaded', () => {
     loadProfile();
     renderHomeSchedule();
+
+    // 저장된 약사 복원
+    const savedPh = localStorage.getItem('selectedPharmacist');
+    if (savedPh && pharmacists[savedPh]) {
+        currentPharmacist = pharmacists[savedPh];
+        document.getElementById('tab-ai-icon').src = currentPharmacist.img;
+        document.getElementById('mypage-pharmacist-img').src = currentPharmacist.img;
+        document.getElementById('mypage-pharmacist-name').textContent = currentPharmacist.name;
+    }
     const fs = localStorage.getItem('fontSize');
     if (fs) {
         const frame = document.getElementById('phone-frame');
@@ -151,7 +160,10 @@ function showPage(pageId) {
 
     document.getElementById('back-btn-fixed').style.display = (pageId === 'home') ? 'none' : 'flex';
 
-    if (pageHistory[pageHistory.length - 1] !== pageId) pageHistory.push(pageId);
+    // 로딩 페이지는 히스토리에 넣지 않음
+    if (pageId !== 'loading' && pageHistory[pageHistory.length - 1] !== pageId) {
+        pageHistory.push(pageId);
+    }
 
     if (pageId === 'home') renderHomeSchedule();
     if (pageId === 'pillbox') renderPillBox();
@@ -335,7 +347,10 @@ function renderPillBox() {
             ${alarmInfo}
             <div class="pillbox-actions">
                 <button class="pillbox-btn-open" onclick="openBoxEntry(${idx})">열기</button>
-                <button class="pillbox-btn-open" onclick="openAlarmSetting(${idx})" style="background:#FFF3E0;color:#E65100;">🔔 복약알림</button>
+                ${hasAlarm
+                    ? `<button class="pillbox-btn-open" onclick="turnOffAlarm(${idx})" style="background:#FFE0E0;color:#E74C3C;">🔕 알림끄기</button>`
+                    : `<button class="pillbox-btn-open" onclick="openAlarmSetting(${idx})" style="background:#FFF3E0;color:#E65100;">🔔 복약알림</button>`
+                }
                 <button class="pillbox-btn-delete" onclick="deleteBoxEntry(${idx})">삭제</button>
             </div>
         </div>`;
@@ -498,7 +513,7 @@ function addHistory(detections) {
         count: detections.length,
     });
 
-    if (history.length > 20) history = history.slice(0, 20);
+    if (history.length > 10) history = history.slice(0, 10);
     localStorage.setItem('detectHistory', JSON.stringify(history));
 }
 
@@ -538,45 +553,258 @@ function clearAllPillBox() {
     showToast('🗑️ 약상자가 비워졌습니다');
 }
 
-// 홈 복약 일정
+// 홈 복약 일정 (가로 슬라이드)
+const FAKE_NOW = { h: 12, m: 26 }; // fake_top 시간 고정
+
+function getScheduleState() {
+    try { return JSON.parse(localStorage.getItem('scheduleState') || '{}'); } catch { return {}; }
+}
+function saveScheduleState(state) {
+    localStorage.setItem('scheduleState', JSON.stringify(state));
+}
+
 function renderHomeSchedule() {
     const container = document.getElementById('home-schedule');
     const box = getPillBox();
     const labels = ['아침', '점심', '저녁', '오후', '새벽'];
+    const state = getScheduleState();
 
     const alarms = box.filter(e => e.alarm);
     if (alarms.length === 0) {
-        container.innerHTML = '<div class="schedule-card"><span class="schedule-text" style="color:#BBB;">약상자에서 복약 알림을 설정해보세요</span></div>';
+        container.innerHTML = '<div class="schedule-empty">약상자에서 복약 알림을 설정해보세요</div>';
         return;
     }
 
-    let html = '';
+    // 전체 스케줄 수집 + 시간순 정렬
+    const allSchedules = [];
     alarms.forEach(entry => {
         const pillNames = entry.pills.map(p => p.name);
-        const preview = pillNames.length <= 2 ? pillNames.join(', ') : pillNames[0] + ` 외 ${pillNames.length - 1}`;
-        const sym = entry.symptom || { emoji: '💊', label: '' };
+        const preview = pillNames.length <= 2 ? pillNames.join(', ') : pillNames[0] + ' 외 ' + (pillNames.length - 1);
 
         entry.alarm.schedules.forEach((time, i) => {
-            const label = labels[i] || (i+1) + '회';
-            const h = parseInt(time.split(':')[0]);
-            const ampm = h < 12 ? 'AM' : 'PM';
-            const displayTime = time;
+            const [h, m] = time.split(':').map(Number);
+            const key = entry.id + '_' + i;
+            const done = state[key] === true;
+            const nowMin = FAKE_NOW.h * 60 + FAKE_NOW.m;
+            const schedMin = h * 60 + m;
+            const isPast = schedMin <= nowMin;
 
-            html += `
-            <div class="schedule-card">
-                <span class="schedule-time">${displayTime}<br>${ampm}</span>
-                <span class="schedule-text">${preview} - ${label} 복용</span>
-                <span class="schedule-arrow">›</span>
-            </div>`;
+            let status = 'safe';
+            if (done) status = 'done';
+            else if (isPast) status = 'warning';
+
+            allSchedules.push({
+                key, time, h, m, preview, label: labels[i] || (i + 1) + '회',
+                status, done, isPast, entryId: entry.id,
+            });
         });
     });
 
+    allSchedules.sort((a, b) => (a.h * 60 + a.m) - (b.h * 60 + b.m));
+
+    let html = '';
+    let firstActiveIdx = -1;
+
+    allSchedules.forEach((s, idx) => {
+        const ampm = s.h < 12 ? 'AM' : 'PM';
+        const h12 = s.h % 12 || 12;
+        const statusMsg = s.done ? '' : s.isPast ? '<div class="schedule-status">⚠️ 복용 시간이 지났습니다</div>' : '';
+        const doneBadge = s.done ? '<div class="schedule-done-badge">✓ 복용완료</div>' : '';
+        const clickAction = s.done ? '' : `onclick="markDone('${s.key}')"`;
+
+        if (!s.done && firstActiveIdx < 0) firstActiveIdx = idx;
+
+        html += `
+        <div class="schedule-card ${s.status}" ${clickAction} id="sched-${idx}">
+            <div style="display:flex;align-items:center;">
+                <span class="schedule-time">${h12}:${String(s.m).padStart(2, '0')}<br>${ampm}</span>
+                <div class="schedule-info">
+                    <div class="schedule-pills">${s.preview}</div>
+                    <div class="schedule-label">${s.label} 복용</div>
+                    ${statusMsg}
+                    ${doneBadge}
+                </div>
+            </div>
+        </div>`;
+    });
+
     container.innerHTML = html;
+
+    // 현재 활성 카드로 스크롤 + 슬라이더 초기화
+    setTimeout(() => {
+        if (firstActiveIdx >= 0) {
+            const activeCard = document.getElementById('sched-' + firstActiveIdx);
+            if (activeCard) container.scrollLeft = activeCard.offsetLeft - 20;
+        }
+        initSlider();
+    }, 100);
 }
 
-// AI약사 탭 (준비중)
+// 폴더 탭 전환
+function switchFolder(idx, el) {
+    document.querySelectorAll('.folder-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.folder-panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('folder-' + idx).classList.add('active');
+}
+
+// 좌우 버튼 스크롤
+function scrollSchedule(dir) {
+    const slider = document.getElementById('home-schedule');
+    if (!slider) return;
+    slider.scrollBy({ left: dir * 272, behavior: 'smooth' });
+}
+
+// 슬라이더 드래그 (터치 + 마우스)
+function initSlider() {
+    const slider = document.getElementById('home-schedule');
+    if (!slider) return;
+
+    let isDown = false;
+    let startX, scrollLeft, startTime, velocity;
+
+    const onStart = (x) => {
+        isDown = true;
+        dragMoved = false;
+        startX = x;
+        scrollLeft = slider.scrollLeft;
+        startTime = Date.now();
+        velocity = 0;
+        slider.style.scrollBehavior = 'auto';
+        slider.style.cursor = 'grabbing';
+    };
+
+    const onMove = (x) => {
+        if (!isDown) return;
+        const dx = x - startX;
+        if (Math.abs(dx) > 5) dragMoved = true;
+        const dt = Date.now() - startTime;
+        velocity = dx / (dt || 1);
+        slider.scrollLeft = scrollLeft - dx;
+    };
+
+    const onEnd = () => {
+        if (!isDown) return;
+        isDown = false;
+        slider.style.cursor = 'grab';
+        // 관성
+        const momentum = velocity * 200;
+        slider.style.scrollBehavior = 'smooth';
+        slider.scrollLeft -= momentum;
+    };
+
+    // 마우스
+    slider.addEventListener('mousedown', e => { e.preventDefault(); onStart(e.pageX); });
+    slider.addEventListener('mousemove', e => onMove(e.pageX));
+    slider.addEventListener('mouseup', onEnd);
+    slider.addEventListener('mouseleave', onEnd);
+
+    // 터치
+    slider.addEventListener('touchstart', e => onStart(e.touches[0].pageX), { passive: true });
+    slider.addEventListener('touchmove', e => onMove(e.touches[0].pageX), { passive: true });
+    slider.addEventListener('touchend', onEnd);
+
+    slider.style.cursor = 'grab';
+}
+
+let dragMoved = false;
+
+function markDone(key) {
+    if (dragMoved) { dragMoved = false; return; }
+    showConfirm('💊 복용 완료하시겠습니까?', () => {
+        const state = getScheduleState();
+        state[key] = true;
+        saveScheduleState(state);
+        showToast('✅ 복용 완료');
+        renderHomeSchedule();
+    });
+}
+
+function showConfirm(msg, onOk) {
+    const popup = document.getElementById('confirm-popup');
+    document.getElementById('confirm-msg').textContent = msg;
+    const okBtn = document.getElementById('confirm-ok-btn');
+    okBtn.onclick = () => { closeConfirm(); onOk(); };
+    popup.classList.add('active');
+}
+function closeConfirm() {
+    document.getElementById('confirm-popup').classList.remove('active');
+}
+
+// AI 약사
+const pharmacists = {
+    kim: { name: '김원장 약사', img: '/static/img/kim_won_jang.png', greeting: '안녕하세요. 김원장입니다. 궁금한 점을 꼼꼼히 알려드리겠습니다.' },
+    lee: { name: '이준 약사', img: '/static/img/lee_jun.png', greeting: '안녕하세요! 이준 약사입니다. 편하게 물어보세요 😊' },
+    park: { name: '박미소 약사', img: '/static/img/park_miso.png', greeting: '어서오세요~ 박미소 약사예요. 어디가 불편하신가요, 어머님?' },
+    choi: { name: '최유진 약사', img: '/static/img/choi_yujin.png', greeting: '안녕하세요. 최유진 약사입니다. 정확하게 답변 드리겠습니다.' },
+};
+let currentPharmacist = null;
+
 function openAiTab() {
-    showToast('💬 AI약사 기능은 준비 중입니다');
+    showPage('ai');
+}
+
+function selectPharmacist(key) {
+    currentPharmacist = pharmacists[key];
+    localStorage.setItem('selectedPharmacist', key);
+
+    // 채팅 헤더
+    document.getElementById('chat-pharmacist-img').src = currentPharmacist.img;
+    document.getElementById('chat-pharmacist-name').textContent = currentPharmacist.name;
+    document.getElementById('chat-messages').innerHTML = '';
+    addChatBubble(currentPharmacist.greeting, 'bot');
+
+    // 하단 탭 아이콘 변경 + 컬러 유지
+    const tabIcon = document.getElementById('tab-ai-icon');
+    tabIcon.src = currentPharmacist.img;
+    tabIcon.classList.add('selected');
+
+    // 마이페이지 반영
+    document.getElementById('mypage-pharmacist-img').src = currentPharmacist.img;
+    document.getElementById('mypage-pharmacist-name').textContent = currentPharmacist.name;
+
+    // 마이페이지에서 왔으면 마이페이지로, 아니면 채팅으로
+    const prevPage = pageHistory[pageHistory.length - 1];
+    if (prevPage === 'mypage') {
+        showToast(`${currentPharmacist.name}으로 변경되었습니다`);
+        goBack();
+    } else {
+        showPage('ai-chat');
+    }
+}
+
+function addChatBubble(text, type) {
+    const container = document.getElementById('chat-messages');
+    const row = document.createElement('div');
+    row.className = 'chat-row ' + type;
+
+    if (type === 'bot' && currentPharmacist) {
+        const avatar = document.createElement('img');
+        avatar.className = 'chat-avatar';
+        avatar.src = currentPharmacist.img;
+        row.appendChild(avatar);
+    }
+
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble ' + type;
+    bubble.textContent = text;
+    row.appendChild(bubble);
+
+    container.appendChild(row);
+    container.scrollTop = container.scrollHeight;
+}
+
+function sendChat() {
+    const input = document.getElementById('chat-input');
+    const msg = input.value.trim();
+    if (!msg) return;
+    addChatBubble(msg, 'user');
+    input.value = '';
+
+    // API 연결 전 임시 응답
+    setTimeout(() => {
+        addChatBubble('죄송합니다. 현재 AI 상담 기능은 준비 중입니다. 곧 서비스될 예정이니 조금만 기다려주세요! 🙏', 'bot');
+    }, 800);
 }
 
 // 복약 알림
@@ -646,6 +874,17 @@ function saveAlarm() {
     }
 }
 
+
+function turnOffAlarm(idx) {
+    const box = getPillBox();
+    if (box[idx]) {
+        delete box[idx].alarm;
+        savePillBox(box);
+        showToast('🔕 복약 알림이 해제되었습니다');
+        renderPillBox();
+        renderHomeSchedule();
+    }
+}
 
 function deleteBoxEntry(idx) {
     const box = getPillBox();

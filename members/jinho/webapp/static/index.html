@@ -31,6 +31,7 @@
             <div class="content-main">
                 <div class="greeting">
                     <span class="greeting-text">안녕하세요, 민수님</span>
+                    <button class="ai-btn" onclick="openAiTab()">💊 AI 약사 상담</button>
                 </div>
 
                 <div class="search-bar">
@@ -51,16 +52,48 @@
 
             <div class="content-area">
                 <div class="section-title">오늘의 복약 일정</div>
-                <div id="home-schedule"></div>
-
-                <div class="section-title">안전 및 추천 정보</div>
-                <div class="warning-card">
-                    <span class="warning-badge">Warning</span>
-                    <span class="warning-text">[약 A]와 [약 B]는 병용금기입니다. 확인하세요.</span>
+                <div class="schedule-wrapper">
+                    <button class="schedule-nav left" onclick="scrollSchedule(-1)">‹</button>
+                    <div id="home-schedule" class="schedule-slider"></div>
+                    <button class="schedule-nav right" onclick="scrollSchedule(1)">›</button>
                 </div>
-                <div class="warning-card">
-                    <span class="warning-badge">Warning</span>
-                    <span class="warning-text">[약 A]와 [약 B]는 병용금기입니다. 확인하세요.</span>
+
+                <div class="folder-tabs">
+                    <div class="folder-tab active" onclick="switchFolder(0, this)">안전정보</div>
+                    <div class="folder-tab" onclick="switchFolder(1, this)">추천정보</div>
+                    <div class="folder-tab" onclick="switchFolder(2, this)">복용팁</div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-panel active" id="folder-0">
+                        <div class="warning-card">
+                            <span class="warning-badge">Warning</span>
+                            <span class="warning-text">[약 A]와 [약 B]는 병용금기입니다. 확인하세요.</span>
+                        </div>
+                        <div class="warning-card">
+                            <span class="warning-badge">Warning</span>
+                            <span class="warning-text">[약 C]는 공복에 복용하세요.</span>
+                        </div>
+                    </div>
+                    <div class="folder-panel" id="folder-1">
+                        <div class="info-card">
+                            <span class="info-badge">💰</span>
+                            <span class="info-text">가성비 대체약이 있을 수 있습니다. AI 약사에게 상담해보세요.</span>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-badge">📋</span>
+                            <span class="info-text">제네릭 의약품은 같은 성분으로 가격이 30~70% 저렴합니다.</span>
+                        </div>
+                    </div>
+                    <div class="folder-panel" id="folder-2">
+                        <div class="info-card">
+                            <span class="info-badge">💡</span>
+                            <span class="info-text">약은 물과 함께 복용하고, 우유나 주스와는 피하세요.</span>
+                        </div>
+                        <div class="info-card">
+                            <span class="info-badge">💡</span>
+                            <span class="info-text">같은 시간에 복용하면 효과가 일정합니다.</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -105,6 +138,17 @@
         <!-- 토스트 알림 -->
         <div id="toast" class="toast"></div>
 
+        <!-- 확인 팝업 -->
+        <div id="confirm-popup" class="confirm-popup">
+            <div class="confirm-box">
+                <div class="confirm-msg" id="confirm-msg"></div>
+                <div class="confirm-btns">
+                    <button class="confirm-btn-cancel" onclick="closeConfirm()">취소</button>
+                    <button class="confirm-btn-ok" id="confirm-ok-btn">확인</button>
+                </div>
+            </div>
+        </div>
+
         <!-- ===== 약상자 ===== -->
         <div id="page-pillbox" class="page">
             <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
@@ -136,9 +180,15 @@
                     <div id="mypage-symptoms" class="mypage-symptoms"></div>
                 </div>
 
-                <!-- 검출 히스토리 -->
-                <div class="section-title">📋 검출 히스토리</div>
-                <div id="history-content"></div>
+                <!-- 담당 약사 -->
+                <div class="mypage-card" style="display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="showPage('ai')">
+                    <img id="mypage-pharmacist-img" src="/static/img/ai_default.png" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">
+                    <div style="flex:1;">
+                        <div style="font-size:14px;font-weight:600;color:#2D3436;" id="mypage-pharmacist-name">담당 약사를 선택해주세요</div>
+                        <div style="font-size:11px;color:#999;">탭하여 AI 약사 변경</div>
+                    </div>
+                    <span style="color:#CCC;font-size:18px;">›</span>
+                </div>
 
                 <!-- 설정 -->
                 <div class="section-title">⚙️ 설정</div>
@@ -160,6 +210,10 @@
                         <span class="setting-value">v1.0</span>
                     </div>
                 </div>
+
+                <!-- 검출 히스토리 -->
+                <div class="section-title">📋 검출 히스토리</div>
+                <div id="history-content"></div>
             </div>
         </div>
 
@@ -225,9 +279,54 @@
             </div>
         </div>
 
-        <!-- ===== AI약사 (준비중) ===== -->
+        <!-- ===== AI약사 선택 ===== -->
         <div id="page-ai" class="page">
             <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">💊 AI 약사 상담</div>
+            <div style="padding:0 16px;">
+                <div style="text-align:center;color:#999;font-size:13px;margin-bottom:16px;">상담할 약사를 선택해주세요</div>
+                <div class="pharmacist-grid">
+                    <div class="pharmacist-card" onclick="selectPharmacist('kim')">
+                        <img src="/static/img/kim_won_jang.png" class="pharmacist-img" alt="">
+                        <div class="pharmacist-name">김원장 약사</div>
+                        <div class="pharmacist-desc">"꼼꼼하게 알려드립니다"</div>
+                    </div>
+                    <div class="pharmacist-card" onclick="selectPharmacist('lee')">
+                        <img src="/static/img/lee_jun.png" class="pharmacist-img" alt="">
+                        <div class="pharmacist-name">이준 약사</div>
+                        <div class="pharmacist-desc">"편하게 물어보세요"</div>
+                    </div>
+                    <div class="pharmacist-card" onclick="selectPharmacist('park')">
+                        <img src="/static/img/park_miso.png" class="pharmacist-img" alt="">
+                        <div class="pharmacist-name">박미소 약사</div>
+                        <div class="pharmacist-desc">"따뜻하게 상담해요"</div>
+                    </div>
+                    <div class="pharmacist-card" onclick="selectPharmacist('choi')">
+                        <img src="/static/img/choi_yujin.png" class="pharmacist-img" alt="">
+                        <div class="pharmacist-name">최유진 약사</div>
+                        <div class="pharmacist-desc">"정확하게 답해드려요"</div>
+                    </div>
+                </div>
+                <div style="text-align:center;padding:12px;color:#CCC;font-size:10px;">AI 상담은 참고용이며, 실제 약사와 의견이 다를 수 있습니다.</div>
+            </div>
+        </div>
+
+        <!-- ===== AI약사 채팅 ===== -->
+        <div id="page-ai-chat" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="chat-header">
+                <img id="chat-pharmacist-img" src="" class="chat-pharmacist-thumb" alt="">
+                <div>
+                    <div id="chat-pharmacist-name" class="chat-pharmacist-name"></div>
+                    <div class="chat-online">● 상담 가능</div>
+                </div>
+            </div>
+            <div class="chat-disclaimer">⚠️ AI 상담은 참고용이며, 실제 약사와 의견이 다를 수 있습니다</div>
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" class="chat-input" placeholder="메시지를 입력하세요..." onkeypress="if(event.key==='Enter')sendChat()">
+                <button class="chat-send-btn" onclick="sendChat()">전송</button>
+            </div>
         </div>
 
         <!-- ===== 하단 탭바 ===== -->
@@ -245,7 +344,7 @@
                 <span class="tab-label">마이페이지</span>
             </div>
             <div class="tab-item" onclick="openAiTab()" data-page="ai">
-                <img src="/static/img/setting.png" class="tab-icon" alt="">
+                <img id="tab-ai-icon" src="/static/img/ai_default.png" class="tab-icon tab-ai-icon" alt="">
                 <span class="tab-label">AI약사</span>
             </div>
         </div>

@@ -113,11 +113,54 @@ body {
 /* 인사말 */
 .greeting {
     margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .greeting-text {
     font-size: 22px;
     font-weight: 700;
     color: #2D3436;
+}
+
+/* AI 약사 상담 버튼 */
+.ai-btn {
+    background: linear-gradient(135deg, #FF9A56, #FF7043);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    animation: aiBounce 2.5s ease-in-out infinite, aiGlow 2.5s ease-in-out infinite;
+    transition: transform 0.15s;
+}
+.ai-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -75%;
+    width: 50%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-20deg);
+    animation: aiShine 3s ease-in-out infinite;
+}
+.ai-btn:active { transform: scale(0.92); }
+
+@keyframes aiBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+@keyframes aiGlow {
+    0%, 100% { box-shadow: 0 2px 8px rgba(255,112,67,0.25); }
+    50% { box-shadow: 0 4px 16px rgba(255,112,67,0.5); }
+}
+@keyframes aiShine {
+    0%, 100% { left: -75%; }
+    50% { left: 125%; }
 }
 
 /* 검색바 */
@@ -196,16 +239,70 @@ body {
     margin: 16px 0 10px;
 }
 
-/* 복약 일정 카드 */
-.schedule-card {
+/* 복약 일정 wrapper */
+.schedule-wrapper {
     display: flex;
     align-items: center;
+    gap: 4px;
+    position: relative;
+}
+.schedule-nav {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: #E0E0E0;
+    color: #888;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.15s;
+}
+.schedule-nav:active { background: #AFDBCA; }
+
+/* 복약 일정 가로 슬라이드 */
+.schedule-slider {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 0 8px;
+    scrollbar-width: none;
+}
+.schedule-slider::-webkit-scrollbar { display: none; }
+
+.schedule-card {
+    flex: 0 0 260px;
+    scroll-snap-align: center;
     background: #FFFFFF;
     border-radius: 14px;
     padding: 14px 16px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    margin-bottom: 6px;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+    position: relative;
 }
+.schedule-card:active { transform: scale(0.97); }
+
+/* 상태별 스타일 */
+.schedule-card.done {
+    background: #E8E8E8;
+    opacity: 0.6;
+}
+.schedule-card.done .schedule-time { background: #999; }
+.schedule-card.done .schedule-text { color: #999; }
+.schedule-card.done .schedule-status { color: #999; }
+
+.schedule-card.warning .schedule-time { background: #FF9800; }
+
+.schedule-card.safe .schedule-time { background: #4ECDC4; }
+
 .schedule-time {
     background: #4ECDC4;
     color: white;
@@ -217,40 +314,111 @@ body {
     line-height: 1.3;
     margin-right: 12px;
     flex-shrink: 0;
+    display: inline-block;
 }
-.schedule-text {
-    font-size: 14px;
-    color: #2D3436;
+.schedule-info {
     flex: 1;
 }
-.schedule-arrow {
-    font-size: 20px;
-    color: #4ECDC4;
+.schedule-pills {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2D3436;
+    margin-bottom: 2px;
+}
+.schedule-label {
+    font-size: 12px;
+    color: #999;
+}
+.schedule-status {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 6px;
+    color: #FF9800;
+}
+.schedule-done-badge {
+    font-size: 11px;
     font-weight: 700;
+    color: white;
+    background: #999;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+    display: inline-block;
+}
+.schedule-empty {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px 16px;
+    text-align: center;
+    color: #BBB;
+    font-size: 13px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    flex: 0 0 100%;
 }
 
-/* Warning 카드 */
-.warning-card {
+/* 폴더 탭 */
+.folder-tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 16px;
+    padding-left: 4px;
+}
+.folder-tab {
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #999;
+    background: #E9ECEF;
+    border-radius: 10px 10px 0 0;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    margin-right: 3px;
+    transition: all 0.2s;
+}
+.folder-tab.active {
+    background: #FFFFFF;
+    color: #2D3436;
+    box-shadow: 0 -2px 6px rgba(0,0,0,0.06);
+    z-index: 2;
+}
+.folder-content {
+    background: #FFFFFF;
+    border-radius: 0 14px 14px 14px;
+    padding: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    margin-bottom: 12px;
+    min-height: 80px;
+}
+.folder-panel { display: none; }
+.folder-panel.active { display: block; }
+
+/* Warning / Info 카드 */
+.warning-card, .info-card {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    background: #FFFFFF;
-    border-radius: 14px;
-    padding: 14px 16px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    background: #FAFAFA;
+    border-radius: 10px;
+    padding: 12px 14px;
     margin-bottom: 8px;
 }
+.warning-card:last-child, .info-card:last-child { margin-bottom: 0; }
 .warning-badge {
     background: #E74C3C;
     color: white;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    padding: 4px 10px;
+    padding: 3px 8px;
     border-radius: 6px;
     flex-shrink: 0;
 }
-.warning-text {
-    font-size: 13px;
+.info-badge {
+    font-size: 16px;
+    flex-shrink: 0;
+}
+.warning-text, .info-text {
+    font-size: 12px;
     color: #555;
     line-height: 1.5;
 }
@@ -288,6 +456,18 @@ body {
 }
 .tab-item.active .tab-icon { opacity: 0.9; filter: brightness(0) saturate(100%) invert(52%) sepia(65%) saturate(500%) hue-rotate(130deg); }
 .tab-item.active .tab-label { color: #2ECC71; font-weight: 700; }
+
+/* AI약사 탭 아이콘 (원형, 비활성 회색) */
+.tab-ai-icon {
+    border-radius: 50% !important;
+    filter: grayscale(1) !important;
+    opacity: 0.4 !important;
+}
+.tab-item.active .tab-ai-icon,
+.tab-ai-icon.selected {
+    filter: none !important;
+    opacity: 1 !important;
+}
 
 /* ── 로딩 ── */
 .loading-content {
@@ -704,6 +884,199 @@ body {
     border-radius: 8px;
     display: inline-block;
     margin-bottom: 8px;
+}
+
+/* ── AI 약사 선택 ── */
+.pharmacist-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+.pharmacist-card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px 12px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    border: 2px solid transparent;
+}
+.pharmacist-card:active { transform: scale(0.96); }
+.pharmacist-card:hover { border-color: #AFDBCA; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.pharmacist-img {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+}
+.pharmacist-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2D3436;
+    margin-bottom: 4px;
+}
+.pharmacist-desc {
+    font-size: 11px;
+    color: #999;
+    font-style: italic;
+}
+
+/* ── AI 약사 채팅 ── */
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #F0F0F0;
+}
+.chat-pharmacist-thumb {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.chat-pharmacist-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2D3436;
+}
+.chat-online {
+    font-size: 11px;
+    color: #4ECDC4;
+}
+.chat-disclaimer {
+    text-align: center;
+    font-size: 10px;
+    color: #CCC;
+    padding: 8px 16px;
+    background: #FFF9F0;
+    border-bottom: 1px solid #F0F0F0;
+}
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+/* 채팅 행 */
+.chat-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+.chat-row.bot { align-self: flex-start; }
+.chat-row.user { align-self: flex-end; flex-direction: row-reverse; }
+
+.chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.chat-bubble {
+    max-width: 75%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    word-break: break-word;
+    position: relative;
+}
+.chat-bubble.bot {
+    background: white;
+    color: #2D3436;
+    border-top-left-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.chat-bubble.user {
+    background: #AFDBCA;
+    color: #2D3436;
+    border-top-right-radius: 4px;
+}
+.chat-input-area {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    border-top: 1px solid #F0F0F0;
+    background: white;
+}
+.chat-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #E0E0E0;
+    border-radius: 20px;
+    font-size: 13px;
+    outline: none;
+    background: #F8F8F8;
+}
+.chat-input:focus { border-color: #AFDBCA; }
+.chat-send-btn {
+    background: #AFDBCA;
+    color: #2D3436;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.chat-send-btn:active { background: #9BD0BC; }
+
+/* ── 확인 팝업 ── */
+.confirm-popup {
+    display: none;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 30;
+    justify-content: center;
+    align-items: center;
+    border-radius: 28px;
+}
+.confirm-popup.active { display: flex; }
+.confirm-box {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: 280px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    text-align: center;
+}
+.confirm-msg {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2D3436;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+.confirm-btns { display: flex; gap: 10px; }
+.confirm-btn-cancel {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #F0F0F0;
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.confirm-btn-ok {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #AFDBCA;
+    color: #2D3436;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 /* ── 토스트 알림 ── */
