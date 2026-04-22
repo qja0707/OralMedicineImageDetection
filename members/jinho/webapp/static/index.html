@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PillScope</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- 폰 프레임 -->
+    <div id="phone-frame">
+
+        <!-- 홈 화면 -->
+        <div id="page-home" class="page active">
+            <div class="header">
+                <span class="logo">💊 PillScope</span>
+                <span class="subtitle">AI 알약 검출기</span>
+            </div>
+            <div class="home-intro">
+                <p class="home-desc">약 사진으로 이름, 성분, 효능을 확인하세요</p>
+            </div>
+            <div class="home-buttons">
+                <button class="btn-square btn-primary" onclick="openCamera()">
+                    <span class="btn-icon">📷</span>
+                    <span class="btn-text">사진 촬영</span>
+                </button>
+                <button class="btn-square btn-secondary" onclick="openUpload()">
+                    <span class="btn-icon">🖼️</span>
+                    <span class="btn-text">사진 올리기</span>
+                </button>
+            </div>
+            <button class="btn-full btn-menu" onclick="showPage('menu')">📋 메뉴 보기</button>
+            <div class="footer">검출 결과는 참고용이며, 정확한 약 정보는 의사/약사와 상담하세요.</div>
+
+            <!-- 숨겨진 입력 -->
+            <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none">
+            <input type="file" id="upload-input" accept="image/*" style="display:none">
+        </div>
+
+        <!-- 메뉴 화면 -->
+        <div id="page-menu" class="page">
+            <div class="header">
+                <span class="logo">📋 메뉴</span>
+            </div>
+            <div class="menu-list">
+                <button class="menu-item active" onclick="showPage('home')">🔍 약 스캔</button>
+                <div class="menu-item disabled">💊 약상자 <span class="badge">준비중</span></div>
+                <div class="menu-item disabled">⚠️ 병용금기 체크 <span class="badge">준비중</span></div>
+                <div class="menu-item disabled">💰 대체약 추천 <span class="badge">준비중</span></div>
+                <div class="menu-item disabled">⚙️ 설정 <span class="badge">준비중</span></div>
+            </div>
+            <div class="footer">PillScope v1.0</div>
+        </div>
+
+        <!-- 로딩 화면 -->
+        <div id="page-loading" class="page">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p class="loading-text">검출 중...</p>
+            </div>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div id="page-result" class="page">
+            <div class="header">
+                <span class="logo">검출 결과</span>
+            </div>
+            <div class="result-content">
+                <img id="result-image" src="" alt="검출 결과">
+                <div id="result-cards"></div>
+            </div>
+            <button class="btn-full btn-back" onclick="showPage('home')">← 다시 검출하기</button>
+        </div>
+
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
