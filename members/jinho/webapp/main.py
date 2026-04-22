@@ -89,13 +89,32 @@ async def detect(file: UploadFile = File(...)):
 
     detections.sort(key=lambda d: d["confidence"], reverse=True)
 
-    # 검출 이미지 (bbox 그려진)
-    annotated = results[0].plot()
-    annotated_pil = Image.fromarray(annotated[..., ::-1])
+    # 검출 이미지 (약 이름만 표시)
+    from PIL import ImageDraw, ImageFont
+    annotated_pil = Image.fromarray(img_array)
+    draw = ImageDraw.Draw(annotated_pil)
+    try:
+        font = ImageFont.truetype("malgunbd.ttf", 40)
+    except OSError:
+        try:
+            font = ImageFont.truetype("malgun.ttf", 40)
+        except OSError:
+            try:
+                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 36)
+            except OSError:
+                font = ImageFont.load_default()
 
+    for det in detections:
+        x1, y1, x2, y2 = det["bbox"]
+        name = det["name"]
+        draw.rectangle([x1, y1, x2, y2], outline="#4ECDC4", width=5)
+        tw = draw.textlength(name, font=font) if hasattr(draw, 'textlength') else len(name) * 22
+        draw.rectangle([x1, y1 - 52, x1 + tw + 16, y1], fill="white", outline="#4ECDC4", width=2)
+        draw.text((x1 + 8, y1 - 50), name, fill="#2D3436", font=font)
+
+    import base64
     buf = io.BytesIO()
     annotated_pil.save(buf, format="JPEG", quality=85)
-    import base64
     img_b64 = base64.b64encode(buf.getvalue()).decode()
 
     return JSONResponse({
