@@ -180,8 +180,77 @@ function goBack() {
 }
 
 // 카메라/업로드
-function openCamera() { document.getElementById('camera-input').click(); }
+let webcamStream = null;
+
+function openCamera() {
+    // 모바일: 카메라 앱, PC: 웹캠
+    if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+        document.getElementById('camera-input').click();
+    } else {
+        startWebcam();
+    }
+}
 function openUpload() { document.getElementById('upload-input').click(); }
+
+async function startWebcam() {
+    try {
+        const video = document.getElementById('webcam-video');
+        webcamStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'environment', width: 1280, height: 960 }
+        });
+        video.srcObject = webcamStream;
+        showPage('webcam');
+    } catch (err) {
+        showToast('카메라를 사용할 수 없습니다');
+        document.getElementById('camera-input').click();
+    }
+}
+
+function captureWebcam() {
+    const video = document.getElementById('webcam-video');
+    const canvas = document.getElementById('webcam-canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+
+    stopWebcamStream();
+    showPage('loading');
+
+    canvas.toBlob(async (blob) => {
+        const formData = new FormData();
+        formData.append('file', blob, 'capture.jpg');
+
+        try {
+            const res = await fetch('/api/detect', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.error) { showToast(data.error); showPage('home'); return; }
+
+            document.getElementById('result-image-section').style.display = 'none';
+            document.getElementById('detect-image').src = 'data:image/jpeg;base64,' + data.image;
+            document.getElementById('detect-image-section').style.display = 'block';
+
+            lastDetections = data.detections;
+            addHistory(data.detections);
+            renderCards(data.detections, data.count);
+            showPage('result');
+        } catch (err) {
+            showToast('검출 실패');
+            showPage('home');
+        }
+    }, 'image/jpeg', 0.9);
+}
+
+function stopWebcam() {
+    stopWebcamStream();
+    goBack();
+}
+
+function stopWebcamStream() {
+    if (webcamStream) {
+        webcamStream.getTracks().forEach(t => t.stop());
+        webcamStream = null;
+    }
+}
 
 document.getElementById('camera-input').addEventListener('change', handleFile);
 document.getElementById('upload-input').addEventListener('change', handleFile);
@@ -740,8 +809,23 @@ const pharmacists = {
 };
 let currentPharmacist = null;
 
-function openAiTab() {
+// 홈 상단 버튼: 항상 약사 선택 → 선택 후 채팅
+function openAiSelect() {
     showPage('ai');
+}
+
+// 하단 탭: 약사 있으면 바로 채팅, 없으면 선택
+function openAiTab() {
+    if (currentPharmacist) {
+        document.getElementById('chat-pharmacist-img').src = currentPharmacist.img;
+        document.getElementById('chat-pharmacist-name').textContent = currentPharmacist.name;
+        if (document.getElementById('chat-messages').children.length === 0) {
+            addChatBubble(currentPharmacist.greeting, 'bot');
+        }
+        showPage('ai-chat');
+    } else {
+        showPage('ai');
+    }
 }
 
 function selectPharmacist(key) {
@@ -763,11 +847,12 @@ function selectPharmacist(key) {
     document.getElementById('mypage-pharmacist-img').src = currentPharmacist.img;
     document.getElementById('mypage-pharmacist-name').textContent = currentPharmacist.name;
 
-    // 마이페이지에서 왔으면 마이페이지로, 아니면 채팅으로
-    const prevPage = pageHistory[pageHistory.length - 1];
-    if (prevPage === 'mypage') {
+    // 어디서 왔는지에 따라 다른 동작
+    const fromPage = pageHistory.length >= 2 ? pageHistory[pageHistory.length - 2] : 'home';
+
+    if (fromPage === 'mypage') {
         showToast(`${currentPharmacist.name}으로 변경되었습니다`);
-        goBack();
+        showPage('mypage');
     } else {
         showPage('ai-chat');
     }
@@ -794,17 +879,53 @@ function addChatBubble(text, type) {
     container.scrollTop = container.scrollHeight;
 }
 
-function sendChat() {
+let chatHistory = [];
+
+async function sendChat() {
     const input = document.getElementById('chat-input');
     const msg = input.value.trim();
     if (!msg) return;
     addChatBubble(msg, 'user');
+    chatHistory.push({ type: 'user', text: msg });
     input.value = '';
+    input.disabled = true;
 
-    // API 연결 전 임시 응답
-    setTimeout(() => {
-        addChatBubble('죄송합니다. 현재 AI 상담 기능은 준비 중입니다. 곧 서비스될 예정이니 조금만 기다려주세요! 🙏', 'bot');
-    }, 800);
+    addChatBubble('...', 'bot');
+    const loadingBubble = document.getElementById('chat-messages').lastChild;
+
+    const profile = getProfile();
+    const pharmacistKey = localStorage.getItem('selectedPharmacist') || 'kim';
+
+    const pillbox = getPillBox();
+    const currentMeds = [];
+    pillbox.forEach(entry => {
+        entry.pills.forEach(p => {
+            if (p.name && !currentMeds.includes(p.name)) currentMeds.push(p.name);
+        });
+    });
+
+    try {
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: msg,
+                pharmacist: pharmacistKey,
+                history: chatHistory.slice(-10),
+                user_symptoms: profile.symptoms || [],
+                current_meds: currentMeds,
+            }),
+        });
+        const data = await res.json();
+        loadingBubble.remove();
+        addChatBubble(data.reply, 'bot');
+        chatHistory.push({ type: 'bot', text: data.reply });
+    } catch (err) {
+        loadingBubble.remove();
+        addChatBubble('연결에 실패했습니다. 다시 시도해주세요.', 'bot');
+    }
+    input.disabled = false;
+    input.focus();
 }
 
 // 복약 알림

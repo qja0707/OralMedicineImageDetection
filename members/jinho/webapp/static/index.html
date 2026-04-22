@@ -31,7 +31,7 @@
             <div class="content-main">
                 <div class="greeting">
                     <span class="greeting-text">안녕하세요, 민수님</span>
-                    <button class="ai-btn" onclick="openAiTab()">💊 AI 약사 상담</button>
+                    <button class="ai-btn" onclick="openAiSelect()">💊 AI 약사 상담</button>
                 </div>
 
                 <div class="search-bar">
@@ -99,6 +99,20 @@
 
             <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none">
             <input type="file" id="upload-input" accept="image/*" style="display:none">
+        </div>
+
+        <!-- ===== 웹캠 촬영 ===== -->
+        <div id="page-webcam" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">📷 약 사진 촬영</div>
+            <div class="webcam-container">
+                <video id="webcam-video" autoplay playsinline></video>
+                <canvas id="webcam-canvas" style="display:none;"></canvas>
+            </div>
+            <div style="display:flex;gap:10px;padding:12px 16px;">
+                <button class="webcam-capture-btn" onclick="captureWebcam()">📸 촬영</button>
+                <button class="btn-back" onclick="stopWebcam()" style="flex:1;margin:0;">취소</button>
+            </div>
         </div>
 
         <!-- ===== 로딩 ===== -->

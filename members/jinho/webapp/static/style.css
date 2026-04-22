@@ -1,6 +1,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-    background: #E8E8E8;
+    background: #FFFFFF;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -18,7 +18,7 @@ body {
     background: #1a1a1a;
     border-radius: 40px;
     padding: 12px;
-    box-shadow: 0 0 0 2px #333, 0 0 0 4px #1a1a1a, 0 8px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 0 0 2px #333, 0 0 0 4px #1a1a1a, 0 12px 50px rgba(0,0,0,0.35), 0 4px 20px rgba(0,0,0,0.15);
 }
 .notch {
     position: absolute;
@@ -967,7 +967,7 @@ body {
     align-items: flex-start;
 }
 .chat-row.bot { align-self: flex-start; }
-.chat-row.user { align-self: flex-end; flex-direction: row-reverse; }
+.chat-row.user { align-self: flex-end; }
 
 .chat-avatar {
     width: 32px;
@@ -978,7 +978,8 @@ body {
 }
 
 .chat-bubble {
-    max-width: 75%;
+    max-width: 85%;
+    width: fit-content;
     padding: 10px 14px;
     border-radius: 16px;
     font-size: 13px;
@@ -1026,6 +1027,36 @@ body {
     white-space: nowrap;
 }
 .chat-send-btn:active { background: #9BD0BC; }
+
+/* ── 채팅 로딩 ── */
+.chat-bubble.bot:has(> .typing-dots) { padding: 12px 18px; }
+@keyframes typingDot {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-4px); }
+}
+
+/* ── 웹캠 ── */
+.webcam-container {
+    padding: 0 16px;
+    margin-bottom: 8px;
+}
+#webcam-video {
+    width: 100%;
+    border-radius: 14px;
+    background: #000;
+}
+.webcam-capture-btn {
+    flex: 2;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: #AFDBCA;
+    color: #2D3436;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.webcam-capture-btn:active { background: #9BD0BC; }
 
 /* ── 확인 팝업 ── */
 .confirm-popup {
