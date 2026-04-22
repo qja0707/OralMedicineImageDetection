@@ -132,7 +132,7 @@ async def health():
 
 
 # Gemini AI 약사 채팅
-GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "***REMOVED***")
+GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
 
 PHARMACIST_PROMPTS = {
     "kim": "당신은 베테랑 약사 김원장입니다. 30년 경력의 꼼꼼하고 신중한 약사입니다. 항상 정확한 정보를 제공하며, 존댓말을 사용합니다. 환자의 건강을 최우선으로 생각합니다.",
@@ -150,6 +150,8 @@ class ChatRequest(BaseModel):
 
 @app.post("/api/chat")
 async def chat(req: ChatRequest):
+    if not GEMINI_KEY:
+        return JSONResponse({"reply": "AI 약사 기능을 사용하려면 GEMINI_API_KEY 환경변수를 설정해주세요."}, status_code=200)
     try:
         from google import genai
 
