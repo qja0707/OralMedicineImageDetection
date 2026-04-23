@@ -6,7 +6,7 @@
 ._*
 
 # Custom folder icons
-Icon
+Icon
 
 # Volume root files
 .DocumentRevisions-V100
@@ -99,3 +99,12 @@ htmlcov/
 
 # pyenv
 # .python-version
+
+### 개인 작업 문서 (git 업로드 금지)
+작업일지*.txt
+사용설명서*.txt
+Daily_협업일지*.txt
+
+### 모델 파일 (GitHub 용량 제한)
+*.pt
+webapp_docker/models/
