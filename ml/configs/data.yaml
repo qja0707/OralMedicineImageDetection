@@ -1,0 +1,8 @@
+paths:
+  raw_images: ml/data/raw/images
+  raw_annotations: ml/data/raw/annotations
+  merged_coco: ml/data/interim/merged/merged_coco.json
+  category_mapping: ml/data/interim/merged/category_mapping.json
+  split_dir: ml/data/interim/splits
+  processed_coco_dir: ml/data/processed/coco
+  processed_yolo_dir: ml/data/processed/yolo

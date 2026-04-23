@@ -1,0 +1,10 @@
+train:
+  image_size: 640
+  use_horizontal_flip: true
+  use_vertical_flip: true
+  use_rotate: true
+  use_color_jitter: true
+  use_noise: true
+val:
+  image_size: 640
+  resize_only: true
