@@ -2,7 +2,7 @@
 # Indirect dependencies are intentionally omitted; pip will resolve them.
 
 # Core ML / data tooling
-numpy<2.2
+numpy<2.1
 Pillow<12
 matplotlib
 albumentations
