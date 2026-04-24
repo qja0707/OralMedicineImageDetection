@@ -6,8 +6,92 @@ AI 모델을 활용하여 경구약제 객체를 탐지하는 프로젝트입니
 ## 프로젝트 목표
 경구약제 이미지에서 객체를 정확하게 탐지할 수 있는 AI 모델을 구축하고, 이를 통해 약제 식별 자동화 가능성을 확인합니다.
 
+---
+
 ## 개발 환경 및 실행 방법
-추후 작성 예정
+### 로컬 개발 환경
+
+로컬에서 작업할 때는 가상환경을 만든 뒤 의존성을 설치하는 것을 기본으로 합니다.
+
+#### 가상환경 생성 및 활성화
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+#### 의존성 설치
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r ml/requirements.txt
+```
+
+#### 환경변수 파일 준비
+
+```bash
+cp ml/.env.example ml/.env
+```
+
+#### Kaggle 원본 데이터 다운로드
+
+`ml/.env`에 들어 있는 `KAGGLE_API_TOKEN`을 읽어 `ml/data/raw`를 채웁니다.
+
+```bash
+python -m ml.scripts.00_download_kaggle_data
+```
+
+#### 통합 COCO 생성 스크립트 실행
+
+```bash
+python -m ml.scripts.01_merge_coco
+```
+
+### Colab 실행 환경
+
+Colab에서는 별도 `venv`를 만들지 않고 런타임에 바로 패키지를 설치합니다.
+
+1. Colab 런타임에서 저장소 clone
+
+```bash
+!git clone https://github.com/qja0707/OralMedicineImageDetection.git
+%cd /content/OralMedicineImageDetection
+```
+
+2. 의존성 설치
+
+```bash
+!python -m pip install --upgrade pip
+!python -m pip install -r ml/requirements.txt
+```
+
+3. 환경변수 파일 준비
+
+```bash
+!cp ml/.env.example ml/.env
+```
+
+4. Kaggle 원본 데이터 다운로드
+
+```bash
+!python -m ml.scripts.00_download_kaggle_data
+```
+
+5. 통합 COCO 생성 스크립트 실행
+
+```bash
+!python -m ml.scripts.01_merge_coco
+```
+
+### 산출물 확인
+
+- `ml/data/interim/merged/train_coco.json`
+- `ml/data/interim/merged/category_mapping.json`
+- `ml/data/interim/merged/annotation_metadata.json`
+- `ml/data/interim/merged/dataset_summary.txt`
+
+
+---
 
 ## 일정
 2026년 4월 20일 ~ 2026년 5월 11일

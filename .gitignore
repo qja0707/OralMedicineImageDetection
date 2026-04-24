@@ -77,6 +77,10 @@ dist/
 
 # dotenv environment variable files
 .env
+.env.*
+ml/.env
+ml/.env.*
+!ml/.env.example
 
 # Virtual environments
 .venv

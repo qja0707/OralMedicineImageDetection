@@ -2,6 +2,16 @@
 
 여기에는 순서대로 실행하는 래퍼 스크립트를 둡니다.
 
+공통 전제:
+
+- `ml/requirements.txt` 설치 후 실행
+- Kaggle이 필요한 스크립트는 `ml/.env`를 직접 읽음
+
+현재 사용 중:
+
+- `00_download_kaggle_data.py`: `ml/.env`에서 `KAGGLE_API_TOKEN`을 읽어 Kaggle competition 데이터를 다운로드하고 `ml/data/raw`를 채움
+- `01_merge_coco.py`: `ml/data/raw`의 원본 annotation/image를 읽어 `ml/data/interim/merged`에 통합 COCO를 생성
+
 예시:
 
 - `01_merge_coco.py`
