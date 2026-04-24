@@ -156,6 +156,41 @@ python -m ml.scripts.prepare_pill_generation_dataset
 - `data/interim/pill_generation/metadata.csv`
 - `data/interim/pill_generation/summary.json`
 
+#### SDXL + LoRA 학습용 dataset 포맷이 필요할 때:
+
+`pill crop` 이미지와 generation metadata를 바탕으로 `images/`, `captions/`, `metadata.jsonl` 형식의 SDXL 학습 입력을 생성합니다.
+
+```bash
+python -m ml.scripts.prepare_sdxl_lora_dataset
+```
+
+- `data/interim/sdxl_lora/images`
+- `data/interim/sdxl_lora/captions`
+- `data/interim/sdxl_lora/metadata.jsonl`
+- `data/interim/sdxl_lora/manifest.csv`
+- `data/interim/sdxl_lora/summary.json`
+
+#### SDXL + LoRA 학습을 실행할 때:
+
+`diffusers`의 공식 SDXL LoRA 학습 예제 스크립트를 기준으로 `accelerate launch`를 호출합니다.
+
+전제:
+
+- `ml/vendor/diffusers/examples/text_to_image/train_text_to_image_lora_sdxl.py` 경로에 예제 스크립트가 있어야 합니다.
+- `ml/requirements.txt`의 diffusion 학습 의존성이 설치되어 있어야 합니다.
+
+```bash
+python -m ml.scripts.05_train_sdxl_lora
+```
+
+기본 설정 파일:
+
+- `ml/configs/train/sdxl_lora.yaml`
+
+기본 출력 경로:
+
+- `ml/outputs/checkpoints/sdxl_lora`
+
 ### 학습 완료 후 `best.pt` 기준 검증이 필요할 때만 실행합니다.
 
 ```bash

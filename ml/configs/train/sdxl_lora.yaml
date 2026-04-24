@@ -1,0 +1,27 @@
+sdxl_lora:
+  pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
+  train_data_dir: ml/data/interim/sdxl_lora
+  output_dir: ml/outputs/checkpoints/sdxl_lora
+  script_path: ml/vendor/diffusers/examples/text_to_image/train_text_to_image_lora_sdxl.py
+  resolution: 512
+  train_batch_size: 1
+  gradient_accumulation_steps: 4
+  learning_rate: 1.0e-4
+  lr_scheduler: constant
+  lr_warmup_steps: 0
+  num_train_epochs: 100
+  checkpointing_steps: 500
+  validation_epochs: 10
+  rank: 8
+  seed: 42
+  mixed_precision: fp16
+  dataloader_num_workers: 4
+  center_crop: true
+  random_flip: true
+  train_text_encoder: false
+  allow_tf32: true
+  report_to: tensorboard
+  num_validation_images: 4
+  validation_prompt:
+    - "a close-up product photo of a white round pill"
+    - "a close-up product photo of a pink oval pill"

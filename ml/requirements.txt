@@ -8,3 +8,13 @@ PyYAML
 
 # Model inference / training
 ultralytics>=8.3.0
+
+# SDXL LoRA training
+torch
+torchvision
+transformers
+diffusers
+accelerate
+datasets
+peft
+safetensors
