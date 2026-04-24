@@ -26,7 +26,7 @@ def build_category_mappings(categories):
         category["id"]: index
         for index, category in enumerate(sorted_categories)
     }
-    yolo_names = [category["name"] for category in sorted_categories]
+    yolo_names = [str(category["id"]) for category in sorted_categories]
     return coco_to_yolo, yolo_names
 
 
