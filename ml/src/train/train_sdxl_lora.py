@@ -33,8 +33,8 @@ def build_accelerate_command(config, project_root, accelerate_config_path=None):
     script_path = _normalize_path(project_root, config.pop("script_path"))
     if not script_path.exists():
         raise FileNotFoundError(
-            "Diffusers SDXL LoRA training script not found: "
-            f"{script_path}. Add the diffusers example script first."
+            "SDXL LoRA training script not found: "
+            f"{script_path}. Place train_text_to_image_lora_sdxl.py under ml/src/train first."
         )
 
     pretrained_model = config.pop("pretrained_model_name_or_path")

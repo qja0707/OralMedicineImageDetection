@@ -174,10 +174,6 @@ python -m ml.scripts.prepare_sdxl_lora_dataset
 
 `diffusers`의 공식 SDXL LoRA 학습 예제 스크립트를 기준으로 `accelerate launch`를 호출합니다.
 
-전제:
-
-- `ml/vendor/diffusers/examples/text_to_image/train_text_to_image_lora_sdxl.py` 경로에 예제 스크립트가 있어야 합니다.
-- `ml/requirements.txt`의 diffusion 학습 의존성이 설치되어 있어야 합니다.
 
 ```bash
 python -m ml.scripts.05_train_sdxl_lora

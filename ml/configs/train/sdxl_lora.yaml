@@ -2,7 +2,7 @@ sdxl_lora:
   pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
   train_data_dir: ml/data/interim/sdxl_lora
   output_dir: ml/outputs/checkpoints/sdxl_lora
-  script_path: ml/vendor/diffusers/examples/text_to_image/train_text_to_image_lora_sdxl.py
+  script_path: ml/src/train/train_text_to_image_lora_sdxl.py
   resolution: 512
   train_batch_size: 1
   gradient_accumulation_steps: 4
