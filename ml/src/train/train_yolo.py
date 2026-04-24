@@ -57,6 +57,7 @@ def train_yolo(
     overrides=None,
 ):
     from ultralytics import YOLO
+    import torch
 
     project_root = Path(__file__).resolve().parents[3]
     data_yaml_path = Path(data_yaml_path)
@@ -79,7 +80,7 @@ def train_yolo(
     }
     device = train_kwargs.get("device")
     if device is None:
-        train_kwargs.pop("device", None)
+        train_kwargs["device"] = 0 if torch.cuda.is_available() else "cpu"
 
     results = model.train(**train_kwargs)
     artifacts = copy_training_artifacts(results.save_dir, project_root)
@@ -87,6 +88,7 @@ def train_yolo(
     print("=" * 55)
     print("YOLO 학습 완료")
     print("=" * 55)
+    print(f"  사용 device        : {train_kwargs['device']}")
     print(f"  학습 결과 디렉터리 : {artifacts['save_dir']}")
     print(f"  best.pt 원본       : {artifacts['best_src']}")
     print(f"  last.pt 원본       : {artifacts['last_src']}")
