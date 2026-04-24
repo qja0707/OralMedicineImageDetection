@@ -78,6 +78,9 @@ def train_yolo(
         **train_config,
         **augmentation,
     }
+    project = train_kwargs.get("project")
+    if project:
+        train_kwargs["project"] = str((project_root / project).resolve())
     device = train_kwargs.get("device")
     if device is None:
         train_kwargs["device"] = 0 if torch.cuda.is_available() else "cpu"
