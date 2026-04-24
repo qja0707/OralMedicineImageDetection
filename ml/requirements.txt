@@ -1,0 +1,10 @@
+# Core ML / data tooling
+numpy
+Pillow>=10.0.0
+matplotlib
+albumentations
+kagglehub
+PyYAML
+
+# Model inference / training
+ultralytics>=8.3.0

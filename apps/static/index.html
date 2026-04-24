@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PillScope</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div id="phone-mockup">
+    <div class="notch"></div>
+    <div id="phone-frame">
+
+        <!-- 뒤로가기 (항상 표시) -->
+        <div id="back-btn-fixed" class="back-btn-fixed" onclick="goBack()" style="display:none;">
+            ←
+        </div>
+
+        <!-- ===== 홈 ===== -->
+        <div id="page-home" class="page active">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+
+            <div class="header-mint">
+                <div class="header-row">
+                    <img src="/static/img/logo_1.png" class="header-logo-full" alt="PillScope">
+                    <span class="app-sub">간편한 AI 알약 검출기</span>
+                </div>
+            </div>
+
+            <div class="content-main">
+                <div class="greeting">
+                    <span class="greeting-text">안녕하세요, 민수님</span>
+                </div>
+
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" class="search-input" placeholder="약 이름, 성분, 제약사 검색">
+                </div>
+                <div id="search-results"></div>
+
+                <div class="main-buttons">
+                    <div class="main-btn-wrapper" onclick="openCamera()">
+                        <img src="/static/img/photo.png" class="main-btn-img" alt="약 사진촬영">
+                    </div>
+                    <div class="main-btn-wrapper" onclick="openUpload()">
+                        <img src="/static/img/upload.png" class="main-btn-img" alt="약 사진 업로드">
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="section-title">오늘의 복약 일정</div>
+                <div id="home-schedule"></div>
+
+                <div class="section-title">안전 및 추천 정보</div>
+                <div class="warning-card">
+                    <span class="warning-badge">Warning</span>
+                    <span class="warning-text">[약 A]와 [약 B]는 병용금기입니다. 확인하세요.</span>
+                </div>
+                <div class="warning-card">
+                    <span class="warning-badge">Warning</span>
+                    <span class="warning-text">[약 A]와 [약 B]는 병용금기입니다. 확인하세요.</span>
+                </div>
+            </div>
+
+            <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none">
+            <input type="file" id="upload-input" accept="image/*" style="display:none">
+        </div>
+
+        <!-- ===== 로딩 ===== -->
+        <div id="page-loading" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p class="loading-text">알약을 검출하고 있습니다...</p>
+            </div>
+        </div>
+
+        <!-- ===== 결과 ===== -->
+        <div id="page-result" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="result-header">
+                <span class="result-title">검출 결과</span>
+                <span class="result-hint">📌 알약 이미지를 탭하면 확대됩니다</span>
+            </div>
+            <div class="result-content">
+                <div id="result-image-section">
+                    <img id="result-image" src="" alt="">
+                </div>
+                <div id="result-cards"></div>
+                <div id="detect-image-section" style="display:none;">
+                    <div class="section-title" style="margin-top:8px;">검출 이미지</div>
+                    <img id="detect-image" src="" alt="검출 결과" style="width:100%;border-radius:12px;">
+                </div>
+            </div>
+            <button class="btn-back" onclick="showPage('home')">← 다시 검출하기</button>
+        </div>
+
+        <!-- 이미지 확대 팝업 -->
+        <div id="img-popup" class="img-popup" onclick="closePopup()">
+            <img id="popup-img" src="" alt="">
+        </div>
+
+        <!-- 토스트 알림 -->
+        <div id="toast" class="toast"></div>
+
+        <!-- ===== 약상자 ===== -->
+        <div id="page-pillbox" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">💊 약상자</div>
+            <div id="pillbox-content"></div>
+        </div>
+
+        <!-- ===== 약상자 상세 ===== -->
+        <div id="page-pillbox-detail" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div id="pillbox-detail-header"></div>
+            <div id="pillbox-detail-content" style="padding:0 16px;"></div>
+        </div>
+
+        <!-- ===== 마이페이지 ===== -->
+        <div id="page-mypage" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">👤 마이페이지</div>
+
+            <div style="padding:0 16px;">
+                <!-- 내 정보 카드 -->
+                <div class="mypage-card">
+                    <div class="mypage-info-row">
+                        <span id="mypage-name" class="mypage-name">민수님</span>
+                        <button class="mypage-edit-btn" onclick="openEditProfile()">내 정보 수정</button>
+                    </div>
+                    <div id="mypage-email" class="mypage-sub"></div>
+                    <div id="mypage-age" class="mypage-sub"></div>
+                    <div id="mypage-symptoms" class="mypage-symptoms"></div>
+                </div>
+
+                <!-- 검출 히스토리 -->
+                <div class="section-title">📋 검출 히스토리</div>
+                <div id="history-content"></div>
+
+                <!-- 설정 -->
+                <div class="section-title">⚙️ 설정</div>
+                <div class="mypage-card">
+                    <div class="setting-row">
+                        <span class="setting-label">글씨 크기</span>
+                        <div class="font-btns">
+                            <button class="font-btn" onclick="setFontSize('small')">작게</button>
+                            <button class="font-btn active" onclick="setFontSize('normal')">보통</button>
+                            <button class="font-btn" onclick="setFontSize('large')">크게</button>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">약상자 전체 삭제</span>
+                        <button class="setting-delete-btn" onclick="clearAllPillBox()">삭제</button>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">앱 버전</span>
+                        <span class="setting-value">v1.0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 내 정보 수정 ===== -->
+        <div id="page-edit-profile" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">✏️ 내 정보 수정</div>
+            <div style="padding:0 16px;">
+                <div class="edit-field">
+                    <label class="edit-label">이름</label>
+                    <input type="text" id="edit-name" class="edit-input" placeholder="이름을 입력하세요">
+                </div>
+                <div class="edit-field">
+                    <label class="edit-label">이메일</label>
+                    <input type="email" id="edit-email" class="edit-input" placeholder="이메일을 입력하세요">
+                </div>
+                <div class="edit-field">
+                    <label class="edit-label">나이</label>
+                    <input type="number" id="edit-age" class="edit-input" placeholder="나이를 입력하세요">
+                </div>
+                <div class="edit-field">
+                    <label class="edit-label">내 증상 (해당 항목 선택)</label>
+                    <div class="symptom-checks">
+                        <label class="symptom-check"><input type="checkbox" value="고혈압"> 고혈압</label>
+                        <label class="symptom-check"><input type="checkbox" value="당뇨"> 당뇨</label>
+                        <label class="symptom-check"><input type="checkbox" value="간질환"> 간질환</label>
+                        <label class="symptom-check"><input type="checkbox" value="신장질환"> 신장질환</label>
+                        <label class="symptom-check"><input type="checkbox" value="위장 약함"> 위장 약함</label>
+                        <label class="symptom-check"><input type="checkbox" value="알레르기"> 알레르기</label>
+                        <label class="symptom-check"><input type="checkbox" value="임산부"> 임산부</label>
+                    </div>
+                    <input type="text" id="edit-symptom-custom" class="edit-input" placeholder="기타 증상 직접 입력" style="margin-top:8px;">
+                </div>
+                <button class="btn-save-profile" onclick="saveProfile()">저장</button>
+            </div>
+        </div>
+
+        <!-- ===== 복약 알림 설정 ===== -->
+        <div id="page-alarm" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">🔔 복약 알림 설정</div>
+            <div style="padding:0 16px;">
+                <div class="alarm-section">
+                    <div class="alarm-label">하루 몇 번 복용하나요?</div>
+                    <div class="alarm-times-btns" id="alarm-times-btns">
+                        <button class="alarm-time-btn" onclick="setAlarmTimes(1)">1회</button>
+                        <button class="alarm-time-btn" onclick="setAlarmTimes(2)">2회</button>
+                        <button class="alarm-time-btn active" onclick="setAlarmTimes(3)">3회</button>
+                        <button class="alarm-time-btn" onclick="setAlarmTimes(4)">4회</button>
+                        <button class="alarm-time-btn" onclick="setAlarmTimes(5)">5회</button>
+                    </div>
+                </div>
+
+                <div class="alarm-section">
+                    <div class="alarm-label">복약 시간 설정</div>
+                    <div id="alarm-time-inputs"></div>
+                </div>
+
+                <div class="alarm-actions">
+                    <button class="btn-save-profile" onclick="saveAlarm()">저장</button>
+                    <button class="btn-back" onclick="goBack()" style="margin-top:8px;">취소</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== AI약사 (준비중) ===== -->
+        <div id="page-ai" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+        </div>
+
+        <!-- ===== 하단 탭바 ===== -->
+        <div class="tab-bar">
+            <div class="tab-item active" onclick="showPage('home')" data-page="home">
+                <img src="/static/img/home.png" class="tab-icon" alt="">
+                <span class="tab-label">홈</span>
+            </div>
+            <div class="tab-item" onclick="showPage('pillbox')" data-page="pillbox">
+                <img src="/static/img/pill_box.png" class="tab-icon" alt="">
+                <span class="tab-label">약상자</span>
+            </div>
+            <div class="tab-item" onclick="showPage('mypage')" data-page="mypage">
+                <img src="/static/img/my_page.png" class="tab-icon" alt="">
+                <span class="tab-label">마이페이지</span>
+            </div>
+            <div class="tab-item" onclick="openAiTab()" data-page="ai">
+                <img src="/static/img/setting.png" class="tab-icon" alt="">
+                <span class="tab-label">AI약사</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

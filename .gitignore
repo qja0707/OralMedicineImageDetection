@@ -77,6 +77,10 @@ dist/
 
 # dotenv environment variable files
 .env
+.env.*
+ml/.env
+ml/.env.*
+!ml/.env.example
 
 # Virtual environments
 .venv
@@ -99,3 +103,32 @@ htmlcov/
 
 # pyenv
 # .python-version
+
+### ML Artifacts
+# Raw and processed datasets
+ml/data/raw/images/
+ml/data/raw/annotations/
+ml/data/interim/merged/*.json
+ml/data/interim/splits/*.json
+ml/data/processed/
+
+# Training outputs
+ml/outputs/
+
+# Model weights and exported binaries
+models/yolo/*.pt
+models/yolo/*.pth
+models/exported/*.onnx
+models/exported/*.engine
+models/exported/*.torchscript
+models/exported/*.tflite
+models/exported/*.pb
+models/exported/*.bin
+
+# Generic ML artifacts
+*.ckpt
+*.safetensors
+*.weights
+wandb/
+runs/
+logs/
