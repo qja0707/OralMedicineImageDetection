@@ -1,16 +1,16 @@
-# Top-level project dependencies for local/Colab setup.
+# Top-level project dependencies tuned for Colab.
 # Indirect dependencies are intentionally omitted; pip will resolve them.
 
 # Core ML / data tooling
-numpy==2.4.4
-Pillow==12.2.0
-matplotlib==3.10.9
-albumentations==2.0.8
-kagglehub==1.0.0
-PyYAML==6.0.3
+numpy<2.2
+Pillow<12
+matplotlib
+albumentations
+kagglehub
+PyYAML
 
 # YOLO training / validation
-ultralytics==8.4.41
+ultralytics
 
 # SDXL LoRA training
 accelerate==1.13.0
@@ -20,7 +20,5 @@ huggingface_hub==1.11.0
 packaging==26.1
 peft==0.19.1
 safetensors==0.8.0rc0
-torch==2.11.0
-torchvision==0.26.0
 tqdm==4.67.3
 transformers==5.6.2
