@@ -21,7 +21,7 @@ python -m pip install --upgrade pip
 python -m pip install -r ml/requirements.txt
 ```
 
-`ml/requirements.txt`는 Colab 기본 런타임과의 충돌을 줄이는 방향으로 맞춰져 있습니다. 로컬 GPU 환경에서는 PyTorch를 시스템/CUDA 버전에 맞게 별도로 설치하는 편이 안전합니다.
+`ml/requirements.txt`는 Colab 기본 런타임이 제공하는 버전과 CUDA 스택을 최대한 그대로 쓰도록, 상위 패키지만 느슨하게 선언합니다. 로컬 GPU 환경에서는 PyTorch/CUDA 조합을 환경에 맞게 별도로 맞추는 편이 안전합니다.
 
 #### 환경변수 파일 준비
 

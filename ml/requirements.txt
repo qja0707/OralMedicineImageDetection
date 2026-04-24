@@ -2,8 +2,8 @@
 # Indirect dependencies are intentionally omitted; pip will resolve them.
 
 # Core ML / data tooling
-numpy<2.1
-Pillow<12
+numpy
+Pillow
 matplotlib
 albumentations
 kagglehub
@@ -13,12 +13,12 @@ PyYAML
 ultralytics
 
 # SDXL LoRA training
-accelerate==1.13.0
-datasets==4.8.4
-diffusers @ git+https://github.com/huggingface/diffusers.git@a37f6f8394ac2a7ee8360c3abea811efe54512b1
-huggingface_hub==1.11.0
-packaging==26.1
-peft==0.19.1
-safetensors==0.8.0rc0
-tqdm==4.67.3
-transformers==5.6.2
+accelerate
+datasets
+diffusers
+huggingface_hub
+packaging
+peft
+safetensors
+tqdm
+transformers
