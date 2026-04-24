@@ -15,6 +15,10 @@
 - `03_build_yolo_dataset.py`: split된 COCO를 기준으로 `ml/data/processed/yolo` 아래 YOLO txt 데이터셋과 `pill.yaml`을 생성
 - `04_train_yolo.py`: YOLO 데이터셋과 증강/학습 설정을 읽어 Ultralytics 학습을 실행
 
+선택 실행:
+
+- `validate_yolo.py`: 학습 완료 후 `best.pt`와 `pill.yaml`을 기준으로 `model.val()`을 수행하고 낮은 클래스부터 matplotlib 그래프로 저장
+
 예시:
 
 - `01_merge_coco.py`
