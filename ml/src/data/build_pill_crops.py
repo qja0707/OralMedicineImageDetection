@@ -30,10 +30,10 @@ def merge_metadata_by_annotation(coco, annotation_metadata):
         if image_info is None:
             continue
 
-        metadata.setdefault("annotation_id", annotation_id)
-        metadata.setdefault("image_id", annotation["image_id"])
-        metadata.setdefault("category_id", annotation["category_id"])
-        metadata.setdefault("file_name", image_info["file_name"])
+        metadata["annotation_id"] = annotation_id
+        metadata["image_id"] = annotation["image_id"]
+        metadata["category_id"] = annotation["category_id"]
+        metadata["file_name"] = image_info["file_name"]
         metadata["bbox"] = annotation["bbox"]
         metadata["area"] = annotation.get("area")
         metadata["iscrowd"] = annotation.get("iscrowd", 0)
