@@ -12,6 +12,7 @@
 - `00_download_kaggle_data.py`: `ml/.env`에서 `KAGGLE_API_TOKEN`을 읽어 Kaggle competition 데이터를 다운로드하고 `ml/data/raw`를 채움
 - `01_merge_coco.py`: `ml/data/raw`의 원본 annotation/image를 읽어 `ml/data/interim/merged`에 통합 COCO를 생성
 - `02_split_coco.py`: 회전만 다른 동일 샘플군이 train/val에 동시에 들어가지 않도록 그룹 단위로 COCO split을 생성
+- `03_build_yolo_dataset.py`: split된 COCO를 기준으로 `ml/data/processed/yolo` 아래 YOLO txt 데이터셋과 `pill.yaml`을 생성
 
 예시:
 
