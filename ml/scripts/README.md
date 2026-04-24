@@ -17,6 +17,7 @@
 
 선택 실행:
 
+- `build_pill_crops.py`: annotation 단위 알약 crop 이미지와 metadata dataset을 `ml/data/interim/pill_crops`에 생성
 - `validate_yolo.py`: 학습 완료 후 `best.pt`와 `pill.yaml`을 기준으로 `model.val()`을 수행하고 낮은 클래스부터 matplotlib 그래프로 저장
 
 예시:
