@@ -16,9 +16,11 @@ def generate_sdxl_lora_samples(
     lora_dir,
     output_dir,
     prompts,
+    negative_prompt=None,
     num_images_per_prompt=1,
     num_inference_steps=20,
     guidance_scale=7.5,
+    lora_scale=1.0,
     height=512,
     width=512,
     seed=42,
@@ -53,8 +55,10 @@ def generate_sdxl_lora_samples(
         for image_index in range(num_images_per_prompt):
             image = pipe(
                 prompt=prompt,
+                negative_prompt=negative_prompt,
                 num_inference_steps=num_inference_steps,
                 guidance_scale=guidance_scale,
+                cross_attention_kwargs={"scale": lora_scale},
                 height=height,
                 width=width,
                 generator=generator,
@@ -86,9 +90,11 @@ def main():
         default="ml/outputs/samples/sdxl_lora",
     )
     parser.add_argument("--prompt", action="append", dest="prompts")
+    parser.add_argument("--negative-prompt")
     parser.add_argument("--num-images-per-prompt", type=int, default=1)
     parser.add_argument("--num-inference-steps", type=int, default=20)
     parser.add_argument("--guidance-scale", type=float, default=7.5)
+    parser.add_argument("--lora-scale", type=float, default=1.0)
     parser.add_argument("--height", type=int, default=512)
     parser.add_argument("--width", type=int, default=512)
     parser.add_argument("--seed", type=int, default=42)
@@ -100,9 +106,11 @@ def main():
         lora_dir=args.lora_dir,
         output_dir=args.output_dir,
         prompts=args.prompts or DEFAULT_PROMPTS,
+        negative_prompt=args.negative_prompt,
         num_images_per_prompt=args.num_images_per_prompt,
         num_inference_steps=args.num_inference_steps,
         guidance_scale=args.guidance_scale,
+        lora_scale=args.lora_scale,
         height=args.height,
         width=args.width,
         seed=args.seed,
