@@ -6,7 +6,46 @@ from collections import Counter
 from pathlib import Path
 
 
-DEFAULT_PROMPT_TEMPLATE = "a close-up product photo of {color} {shape} pill"
+DEFAULT_PROMPT_TEMPLATE = "{description}"
+
+COLOR_ENGLISH_MAP = {
+    "하양": "white",
+    "흰색": "white",
+    "주황": "orange",
+    "노랑": "yellow",
+    "연두": "yellow green",
+    "초록": "green",
+    "청록": "blue green",
+    "파랑": "blue",
+    "남색": "navy",
+    "자주": "purple red",
+    "보라": "purple",
+    "분홍": "pink",
+    "빨강": "red",
+    "갈색": "brown",
+    "회색": "gray",
+    "검정": "black",
+    "투명": "transparent",
+}
+
+SHAPE_ENGLISH_MAP = {
+    "원형": "round",
+    "타원형": "oval",
+    "장방형": "oblong",
+    "반원형": "semicircular",
+    "삼각형": "triangular",
+    "사각형": "square",
+    "마름모형": "diamond-shaped",
+    "오각형": "pentagonal",
+    "육각형": "hexagonal",
+    "팔각형": "octagonal",
+    "기타": "irregular-shaped",
+}
+
+LINE_ENGLISH_MAP = {
+    "-": "score line",
+    "+": "cross score line",
+}
 
 
 def load_json(json_path):
@@ -22,6 +61,28 @@ def normalize_text(value):
     if value is None:
         return ""
     return " ".join(str(value).strip().split())
+
+
+def translate_terms(value, mapping):
+    value = normalize_text(value)
+    if not value:
+        return ""
+
+    parts = []
+    for raw_part in value.replace("/", ",").split(","):
+        part = normalize_text(raw_part)
+        if not part:
+            continue
+        parts.append(mapping.get(part, part))
+
+    return " and ".join(parts)
+
+
+def normalize_imprint(value):
+    value = normalize_text(value)
+    if not value:
+        return ""
+    return " ".join(value.replace("/", " ").split())
 
 
 def slugify_text(value, fallback="na"):
@@ -121,17 +182,42 @@ def infer_crop_root(metadata_path):
 
 
 def build_caption(row, prompt_template):
-    color = row["color_class1"] or "plain"
-    shape = row["drug_shape"] or "unknown-shape"
+    color = translate_terms(row["color_class1"], COLOR_ENGLISH_MAP) or "plain"
+    color2 = translate_terms(row["color_class2"], COLOR_ENGLISH_MAP)
+    shape = translate_terms(row["drug_shape"], SHAPE_ENGLISH_MAP) or "tablet-shaped"
+    print_front = normalize_imprint(row["print_front"])
+    print_back = normalize_imprint(row["print_back"])
+    line_front = translate_terms(row["line_front"], LINE_ENGLISH_MAP)
+    line_back = translate_terms(row["line_back"], LINE_ENGLISH_MAP)
+
+    description_parts = [f"a pharmaceutical {color}"]
+    if color2:
+        description_parts.append(f"and {color2}")
+    description_parts.append(f"{shape} tablet")
+
+    details = []
+    if print_front:
+        details.append(f"front imprint {print_front}")
+    if print_back:
+        details.append(f"back imprint {print_back}")
+    if line_front:
+        details.append(f"front {line_front}")
+    if line_back:
+        details.append(f"back {line_back}")
+
+    description = " ".join(description_parts)
+    if details:
+        description = f"{description} with {', '.join(details)}"
 
     caption = prompt_template.format(
         color=color,
+        color2=color2 or "none",
         shape=shape,
-        color2=row["color_class2"] or "none",
-        print_front=row["print_front"] or "none",
-        print_back=row["print_back"] or "none",
-        line_front=row["line_front"] or "none",
-        line_back=row["line_back"] or "none",
+        print_front=print_front or "none",
+        print_back=print_back or "none",
+        line_front=line_front or "none",
+        line_back=line_back or "none",
+        description=description,
         category_id=row["category_id"],
         condition_key=row["condition_key"],
     )
