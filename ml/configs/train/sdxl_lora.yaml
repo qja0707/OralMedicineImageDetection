@@ -9,19 +9,17 @@ sdxl_lora:
   learning_rate: 1.0e-4
   lr_scheduler: constant
   lr_warmup_steps: 0
-  num_train_epochs: 100
-  checkpointing_steps: 500
-  validation_epochs: 10
+  num_train_epochs: 10
+  checkpointing_steps: 100
+  validation_epochs: 1
   rank: 8
   seed: 42
   mixed_precision: fp16
-  dataloader_num_workers: 4
+  dataloader_num_workers: 2
   center_crop: true
   random_flip: true
   train_text_encoder: false
   allow_tf32: true
   report_to: tensorboard
-  num_validation_images: 4
-  validation_prompt:
-    - "a close-up product photo of a white round pill"
-    - "a close-up product photo of a pink oval pill"
+  num_validation_images: 0
+  validation_prompt: null

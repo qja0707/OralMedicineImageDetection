@@ -15,10 +15,11 @@ ultralytics
 # SDXL LoRA training
 accelerate
 datasets
-diffusers
+diffusers @ git+https://github.com/huggingface/diffusers.git
 huggingface_hub
 packaging
 peft
 safetensors
+torchao>=0.17.0
 tqdm
 transformers
