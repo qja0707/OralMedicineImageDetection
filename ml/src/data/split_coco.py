@@ -1,4 +1,5 @@
 import argparse
+import csv
 import json
 import random
 from collections import Counter, defaultdict
@@ -59,11 +60,60 @@ def build_group_records(coco):
     return groups, annotations_by_image, images_by_id, class_image_count, dict(class_group_count)
 
 
-def assign_validation_groups(groups, val_image_target, seed):
+def find_single_group_category_groups(groups, class_group_count):
+    forced_group_ids = set()
+    forced_category_ids = set()
+
+    for group in groups:
+        for category_id in group["category_counts"]:
+            if class_group_count[category_id] == 1:
+                forced_group_ids.add(group["group_id"])
+                forced_category_ids.add(category_id)
+
+    return forced_group_ids, forced_category_ids
+
+
+def build_forced_val_category_rows(
+    category_ids,
+    categories,
+    class_image_count,
+    class_group_count,
+    groups,
+):
+    category_name_map = {category["id"]: category["name"] for category in categories}
+    category_to_group_ids = defaultdict(list)
+    category_to_image_count_in_forced_groups = defaultdict(int)
+
+    for group in groups:
+        for category_id in group["category_counts"]:
+            if category_id in category_ids:
+                category_to_group_ids[category_id].append(group["group_id"])
+                category_to_image_count_in_forced_groups[category_id] += group["num_images"]
+
+    rows = []
+    for category_id in sorted(category_ids):
+        rows.append(
+            {
+                "category_id": category_id,
+                "category_name": category_name_map.get(category_id, "UNKNOWN"),
+                "num_groups": class_group_count.get(category_id, 0),
+                "num_images": class_image_count.get(category_id, 0),
+                "forced_val_group_ids": category_to_group_ids.get(category_id, []),
+                "forced_val_image_count": category_to_image_count_in_forced_groups.get(category_id, 0),
+            }
+        )
+    return rows
+
+
+def assign_validation_groups(groups, val_image_target, seed, forced_val_group_ids=None):
     random_generator = random.Random(seed)
     groups_by_id = {group["group_id"]: group for group in groups}
-    assigned_val_groups = set()
-    current_val_images = 0
+    assigned_val_groups = set(forced_val_group_ids or [])
+    current_val_images = sum(
+        groups_by_id[group_id]["num_images"]
+        for group_id in assigned_val_groups
+        if group_id in groups_by_id
+    )
 
     class_to_groups = defaultdict(list)
     for group in groups:
@@ -142,8 +192,10 @@ def split_coco_dataset(
     train_filename="train_coco.json",
     val_filename="val_coco.json",
     split_metadata_filename="train_val_split.json",
+    forced_val_categories_filename="forced_val_single_group_categories.csv",
     val_ratio=0.2,
     seed=42,
+    force_single_group_classes_to_val=True,
     verbose=True,
 ):
     coco = load_coco(coco_json_path)
@@ -169,7 +221,42 @@ def split_coco_dataset(
     log(f"  그룹 수           : {len(groups)}개")
     log(f"  val 목표 이미지 수: {val_image_target}개")
 
-    val_group_ids = assign_validation_groups(groups, val_image_target, seed)
+    forced_val_group_ids = set()
+    forced_val_category_ids = set()
+    if force_single_group_classes_to_val:
+        forced_val_group_ids, forced_val_category_ids = find_single_group_category_groups(
+            groups,
+            class_group_count,
+        )
+        forced_val_image_count = sum(
+            groups_by_id[group_id]["num_images"] for group_id in forced_val_group_ids
+        )
+        log(f"  단일 그룹 클래스 수: {len(forced_val_category_ids)}개")
+        log(f"  단일 그룹 val 강제 그룹 수: {len(forced_val_group_ids)}개")
+        log(f"  단일 그룹 val 강제 이미지 수: {forced_val_image_count}개")
+
+    forced_val_category_rows = build_forced_val_category_rows(
+        forced_val_category_ids,
+        coco["categories"],
+        class_image_count,
+        class_group_count,
+        groups,
+    )
+
+    if forced_val_category_rows:
+        log("  단일 그룹 val 강제 클래스 예시:")
+        for row in forced_val_category_rows[:20]:
+            log(
+                f"    [{row['category_id']}] {row['category_name']} "
+                f"(groups={row['num_groups']}, images={row['num_images']})"
+            )
+
+    val_group_ids = assign_validation_groups(
+        groups,
+        val_image_target,
+        seed,
+        forced_val_group_ids=forced_val_group_ids,
+    )
 
     train_image_ids = []
     val_image_ids = []
@@ -199,6 +286,11 @@ def split_coco_dataset(
         for category in coco["categories"]
         if train_class_count[category["id"]] > 0 and val_class_count[category["id"]] == 0
     )
+    missing_in_train = sorted(
+        category["id"]
+        for category in coco["categories"]
+        if val_class_count[category["id"]] > 0 and train_class_count[category["id"]] == 0
+    )
 
     log("\n" + "=" * 55)
     log("2단계: train/val split 결과 집계 중...")
@@ -210,15 +302,20 @@ def split_coco_dataset(
     log(f"  Train 어노테이션 수: {len(train_coco['annotations'])}개")
     log(f"  Val 어노테이션 수  : {len(val_coco['annotations'])}개")
     log(f"  Val 누락 클래스 수 : {len(missing_in_val)}개")
+    log(f"  Train 누락 클래스 수: {len(missing_in_train)}개")
 
+    category_name_map = {category["id"]: category["name"] for category in coco["categories"]}
     if missing_in_val:
-        category_name_map = {category["id"]: category["name"] for category in coco["categories"]}
         preview = ", ".join(category_name_map[category_id] for category_id in missing_in_val[:10])
         log(f"  누락 클래스 예시   : {preview}")
+    if missing_in_train:
+        preview = ", ".join(category_name_map[category_id] for category_id in missing_in_train[:10])
+        log(f"  Train 누락 클래스 예시: {preview}")
 
     train_output_path = output_dir / train_filename
     val_output_path = output_dir / val_filename
     metadata_output_path = output_dir / split_metadata_filename
+    forced_val_categories_output_path = output_dir / forced_val_categories_filename
 
     with open(train_output_path, "w", encoding="utf-8") as file:
         json.dump(train_coco, file, ensure_ascii=False, indent=2)
@@ -228,9 +325,13 @@ def split_coco_dataset(
     split_metadata = {
         "seed": seed,
         "val_ratio": val_ratio,
+        "force_single_group_classes_to_val": force_single_group_classes_to_val,
         "grouping_rule": "file_name stem prefix before first underscore",
         "group_key_example": "K-001900-016548-019607-029451_0_2_0_2_70_000_200.png -> K-001900-016548-019607-029451",
         "num_groups": len(groups),
+        "forced_val_group_ids": sorted(forced_val_group_ids),
+        "forced_val_category_ids": sorted(forced_val_category_ids),
+        "forced_val_single_group_categories": forced_val_category_rows,
         "train_group_ids": train_group_ids,
         "val_group_ids": val_group_ids_sorted,
         "train_image_ids": sorted(train_image_ids),
@@ -238,10 +339,27 @@ def split_coco_dataset(
         "class_image_count": {str(category_id): count for category_id, count in sorted(class_image_count.items())},
         "class_group_count": {str(category_id): count for category_id, count in sorted(class_group_count.items())},
         "missing_in_val_category_ids": missing_in_val,
+        "missing_in_train_category_ids": missing_in_train,
     }
 
     with open(metadata_output_path, "w", encoding="utf-8") as file:
         json.dump(split_metadata, file, ensure_ascii=False, indent=2)
+
+    with open(forced_val_categories_output_path, "w", encoding="utf-8", newline="") as file:
+        fieldnames = [
+            "category_id",
+            "category_name",
+            "num_groups",
+            "num_images",
+            "forced_val_image_count",
+            "forced_val_group_ids",
+        ]
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for row in forced_val_category_rows:
+            csv_row = dict(row)
+            csv_row["forced_val_group_ids"] = ",".join(row["forced_val_group_ids"])
+            writer.writerow(csv_row)
 
     log("\n" + "=" * 55)
     log("3단계: split 산출물 저장 완료")
@@ -249,6 +367,7 @@ def split_coco_dataset(
     log(f"  Train COCO         : {train_output_path}")
     log(f"  Val COCO           : {val_output_path}")
     log(f"  Split metadata     : {metadata_output_path}")
+    log(f"  단일 그룹 val 클래스: {forced_val_categories_output_path}")
 
     return {
         "train_coco": train_coco,
@@ -258,6 +377,7 @@ def split_coco_dataset(
             "train_output_path": train_output_path,
             "val_output_path": val_output_path,
             "metadata_output_path": metadata_output_path,
+            "forced_val_categories_output_path": forced_val_categories_output_path,
         },
     }
 
@@ -269,8 +389,17 @@ def main():
     parser.add_argument("--train-filename", default="train_coco.json")
     parser.add_argument("--val-filename", default="val_coco.json")
     parser.add_argument("--split-metadata-filename", default="train_val_split.json")
+    parser.add_argument(
+        "--forced-val-categories-filename",
+        default="forced_val_single_group_categories.csv",
+    )
     parser.add_argument("--val-ratio", type=float, default=0.2)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument(
+        "--keep-single-group-classes-in-train",
+        action="store_true",
+        help="Disable the default behavior that forces classes with only one source group into val.",
+    )
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
 
@@ -280,8 +409,10 @@ def main():
         train_filename=args.train_filename,
         val_filename=args.val_filename,
         split_metadata_filename=args.split_metadata_filename,
+        forced_val_categories_filename=args.forced_val_categories_filename,
         val_ratio=args.val_ratio,
         seed=args.seed,
+        force_single_group_classes_to_val=not args.keep_single_group_classes_in_train,
         verbose=not args.quiet,
     )
 
