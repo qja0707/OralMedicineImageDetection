@@ -224,7 +224,7 @@ def augment_object(source, rng):
     border_value = tuple(int(v) for v in np.median(crop.reshape(-1, 3), axis=0))
     rotated, rotated_bbox = rotate_crop_and_bbox(crop, bbox, angle, border_value)
 
-    scale = float(rng.uniform(0.35, 1.25))
+    scale = float(rng.uniform(0.9, 1.1))
     new_w = max(2, int(rotated.shape[1] * scale))
     new_h = max(2, int(rotated.shape[0] * scale))
     resized = cv2.resize(rotated, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
