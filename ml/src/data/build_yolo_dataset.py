@@ -3,6 +3,9 @@ import json
 import shutil
 from collections import defaultdict
 from pathlib import Path
+import cv2
+import numpy as np
+
 
 
 def load_json(json_path):
@@ -30,7 +33,7 @@ def build_category_mappings(categories):
     return coco_to_yolo, yolo_names
 
 
-def write_yolo_labels(split_coco, split_name, output_dir, raw_images_dir, coco_to_yolo, verbose):
+def write_yolo_labels(split_coco, split_name, output_dir, raw_images_dir, coco_to_yolo, verbose, target_size=640):
     split_images_dir = output_dir / "images" / split_name
     split_labels_dir = output_dir / "labels" / split_name
     clear_split_dir(split_images_dir)
@@ -48,30 +51,43 @@ def write_yolo_labels(split_coco, split_name, output_dir, raw_images_dir, coco_t
         source_image_path = raw_images_dir / file_name
         if not source_image_path.exists():
             skipped += 1
-            if verbose:
-                print(f"  [skip] image not found: {source_image_path}")
             continue
 
-        target_image_path = split_images_dir / file_name
-        shutil.copy2(source_image_path, target_image_path)
+        # 1. 이미지 로드
+        img = cv2.imread(str(source_image_path))
+        if img is None:
+            skipped += 1
+            continue
 
-        width = image["width"]
-        height = image["height"]
+        h, w = img.shape[:2]
+        
+        # 2. 레터박스 계산 (비율 유지 리사이즈)
+        scale = target_size / max(h, w)
+        new_w, new_h = int(w * scale), int(h * scale)
+        img_resized = cv2.resize(img, (new_w, new_h))
+
+        # 3. 검은색 캔버스 생성 및 이미지 중앙 배치
+        canvas = np.zeros((target_size, target_size, 3), dtype=np.uint8)
+        pad_x = (target_size - new_w) // 2
+        pad_y = (target_size - new_h) // 2
+        canvas[pad_y:pad_y + new_h, pad_x:pad_x + new_w] = img_resized
+
+        # 4. 이미지 저장
+        target_image_path = split_images_dir / f"{Path(file_name).stem}.jpg"
+        cv2.imwrite(str(target_image_path), canvas)
+
+        # 5. 라벨 변환 (레터박스 패딩값 반영)
         label_lines = []
-
         for annotation in annotations_by_image.get(image["id"], []):
-            x, y, w, h = annotation["bbox"]
+            x, y, aw, ah = annotation["bbox"]
             yolo_class_id = coco_to_yolo[annotation["category_id"]]
 
-            cx = (x + w / 2) / width
-            cy = (y + h / 2) / height
-            nw = w / width
-            nh = h / height
-
-            cx = max(0.0, min(1.0, cx))
-            cy = max(0.0, min(1.0, cy))
-            nw = max(0.0, min(1.0, nw))
-            nh = max(0.0, min(1.0, nh))
+            # 레터박스가 적용된 이미지에서의 새로운 중심점 계산
+            # 원본 좌표 -> 리사이즈 좌표 -> 패딩 더하기 -> 640으로 나누기
+            cx = (x * scale + aw * scale / 2 + pad_x) / target_size
+            cy = (y * scale + ah * scale / 2 + pad_y) / target_size
+            nw = (aw * scale) / target_size
+            nh = (ah * scale) / target_size
 
             label_lines.append(f"{yolo_class_id} {cx:.6f} {cy:.6f} {nw:.6f} {nh:.6f}")
 
@@ -79,12 +95,8 @@ def write_yolo_labels(split_coco, split_name, output_dir, raw_images_dir, coco_t
         label_path.write_text("\n".join(label_lines), encoding="utf-8")
         converted += 1
 
-    return {
-        "converted": converted,
-        "skipped": skipped,
-        "images_dir": split_images_dir,
-        "labels_dir": split_labels_dir,
-    }
+    return {"converted": converted, "skipped": skipped}
+
 
 
 def write_data_yaml(output_dir, yolo_names):
