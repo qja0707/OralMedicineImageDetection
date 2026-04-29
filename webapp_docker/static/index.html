@@ -37,6 +37,7 @@
                 <div class="search-bar">
                     <span class="search-icon">🔍</span>
                     <input type="text" id="search-input" class="search-input" placeholder="약 이름·증상으로 검색 (예: 두통, 배아파)">
+                    <button class="shape-search-btn" onclick="showPage('shape-search')">⬠ 모양</button>
                 </div>
                 <div id="search-results"></div>
 
@@ -210,6 +211,18 @@
                     <span style="color:#CCC;font-size:18px;">›</span>
                 </div>
 
+                <!-- 검출 모델 -->
+                <div class="section-title">🤖 검출 모델</div>
+                <div class="mypage-card">
+                    <div class="setting-row">
+                        <span class="setting-label">사용 모델</span>
+                        <select id="model-select" class="model-select" onchange="switchModel()">
+                            <option>로딩중...</option>
+                        </select>
+                    </div>
+                    <div id="model-status" style="font-size:12px;color:#999;margin-top:4px;"></div>
+                </div>
+
                 <!-- 설정 -->
                 <div class="section-title">⚙️ 설정</div>
                 <div class="mypage-card">
@@ -272,6 +285,51 @@
                     <input type="text" id="edit-symptom-custom" class="edit-input" placeholder="기타 증상 직접 입력" style="margin-top:8px;">
                 </div>
                 <button class="btn-save-profile" onclick="saveProfile()">저장</button>
+            </div>
+        </div>
+
+        <!-- ===== 모양으로 약 찾기 ===== -->
+        <div id="page-shape-search" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">⬠ 모양으로 약 찾기</div>
+            <div style="padding:0 16px;">
+                <p style="color:#999;font-size:13px;margin:0 0 14px;">모양, 색상, 각인으로 약을 찾아보세요</p>
+
+                <div class="shape-section">
+                    <label class="shape-label">🔤 각인 문자</label>
+                    <input type="text" id="shape-print-input" class="shape-text-input" placeholder="알약에 적힌 글자 (예: NR800, Airtal)">
+                </div>
+
+                <div class="shape-section">
+                    <label class="shape-label">⬠ 모양</label>
+                    <div class="shape-chips" id="shape-chips">
+                        <button class="shape-chip active" data-value="전체"><span class="shape-icon">⊕</span>전체</button>
+                        <button class="shape-chip" data-value="원형"><span class="shape-icon">●</span>원형</button>
+                        <button class="shape-chip" data-value="타원형"><span class="shape-icon">⬬</span>타원형</button>
+                        <button class="shape-chip" data-value="장방형"><span class="shape-icon">▬</span>장방형</button>
+                        <button class="shape-chip" data-value="육각형"><span class="shape-icon">⬡</span>육각형</button>
+                        <button class="shape-chip" data-value="팔각형"><span class="shape-icon">⯃</span>팔각형</button>
+                    </div>
+                </div>
+
+                <div class="shape-section">
+                    <label class="shape-label">🎨 색상</label>
+                    <div class="color-chips" id="color-chips">
+                        <button class="color-chip active" data-value="전체"><span class="color-dot" style="background:conic-gradient(#FF6B6B,#FFD43B,#51CF66,#339AF0,#CC5DE8,#FF6B6B);"></span>전체</button>
+                        <button class="color-chip" data-value="하양"><span class="color-dot" style="background:#F5F5F5;border:1px solid #D0D0D0;"></span>하양</button>
+                        <button class="color-chip" data-value="노랑"><span class="color-dot" style="background:#FFD43B;"></span>노랑</button>
+                        <button class="color-chip" data-value="주황"><span class="color-dot" style="background:#FF922B;"></span>주황</button>
+                        <button class="color-chip" data-value="분홍"><span class="color-dot" style="background:#F06595;"></span>분홍</button>
+                        <button class="color-chip" data-value="갈색"><span class="color-dot" style="background:#8B6914;"></span>갈색</button>
+                        <button class="color-chip" data-value="초록"><span class="color-dot" style="background:#51CF66;"></span>초록</button>
+                        <button class="color-chip" data-value="파랑"><span class="color-dot" style="background:#339AF0;"></span>파랑</button>
+                        <button class="color-chip" data-value="연두"><span class="color-dot" style="background:#A9E34B;"></span>연두</button>
+                    </div>
+                </div>
+
+                <button class="shape-search-go" onclick="filterByShape()">🔍 검색하기</button>
+
+                <div id="shape-search-results"></div>
             </div>
         </div>
 

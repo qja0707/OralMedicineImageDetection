@@ -19,6 +19,49 @@ function exportLogs() {
     URL.revokeObjectURL(a.href);
 }
 
+// 모델 관리
+async function loadModels() {
+    try {
+        const res = await fetch('/api/models');
+        const data = await res.json();
+        const select = document.getElementById('model-select');
+        const status = document.getElementById('model-status');
+        select.innerHTML = data.models.map(m =>
+            `<option value="${m}" ${m === data.current ? 'selected' : ''}>${m}</option>`
+        ).join('');
+        status.textContent = data.models.length > 0
+            ? `총 ${data.models.length}개 모델 · 현재: ${data.current}`
+            : '모델 없음';
+    } catch (e) {
+        document.getElementById('model-status').textContent = '모델 목록 로드 실패';
+    }
+}
+
+async function switchModel() {
+    const name = document.getElementById('model-select').value;
+    const status = document.getElementById('model-status');
+    status.textContent = '모델 교체 중... (최대 1분 소요)';
+    try {
+        const res = await fetch('/api/models/switch', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+        });
+        const data = await res.json();
+        if (data.success) {
+            status.textContent = `모델 교체 완료: ${data.current}`;
+            showToast(`모델이 ${data.current}로 변경되었습니다`);
+            appLog('모델교체', data.current);
+        } else {
+            status.textContent = `교체 실패: ${data.error}`;
+            showToast('모델 교체 실패');
+        }
+    } catch (e) {
+        status.textContent = '모델 교체 실패';
+        showToast('모델 교체 실패');
+    }
+}
+
 // 병용금기 테이블
 const contraindicationMap = [
     ['아질렉트정', '졸로푸트정', '치명적 세로토닌 증후군 위험 (절대 병용금기)'],
@@ -440,7 +483,7 @@ function showPage(pageId) {
 
     if (pageId === 'home') renderHomeSchedule();
     if (pageId === 'pillbox') renderPillBox();
-    if (pageId === 'mypage') { loadProfile(); renderHistory(); }
+    if (pageId === 'mypage') { loadProfile(); renderHistory(); loadModels(); }
 }
 
 function goBack() {
@@ -648,9 +691,15 @@ function renderCards(detections, count) {
         const desc = getPillDesc(det.name);
         let descHtml = '';
         if (desc) {
-            descHtml = `<div style="margin:8px 0;">
-                <div style="font-size:13px;color:#2D3436;margin-bottom:4px;">💊 <b>약물 효과</b>: ${desc.effect}</div>
-                <div style="font-size:13px;color:#E65100;">⚠️ <b>복용 주의</b>: ${desc.caution}</div>
+            descHtml = `<div style="margin:10px 0;display:flex;flex-direction:column;gap:8px;">
+                <fieldset style="border:1.5px solid #4ECDC4;border-radius:10px;padding:8px 12px 10px;margin:0;">
+                    <legend style="font-size:13px;font-weight:700;color:#4ECDC4;padding:0 6px;">💊 약물 효과</legend>
+                    <div style="font-size:14px;color:#2D3436;line-height:1.5;">${desc.effect}</div>
+                </fieldset>
+                <fieldset style="border:1.5px solid #FF8A80;border-radius:10px;padding:8px 12px 10px;margin:0;">
+                    <legend style="font-size:13px;font-weight:700;color:#E65100;padding:0 6px;">⚠️ 복용 주의</legend>
+                    <div style="font-size:14px;color:#E65100;line-height:1.5;">${desc.caution}</div>
+                </fieldset>
             </div>`;
         }
         let details = '';
@@ -860,9 +909,15 @@ function openBoxEntry(idx) {
         const desc = getPillDesc(det.name);
         let descHtml = '';
         if (desc) {
-            descHtml = `<div style="margin:8px 0;">
-                <div style="font-size:13px;color:#2D3436;margin-bottom:4px;">💊 <b>약물 효과</b>: ${desc.effect}</div>
-                <div style="font-size:13px;color:#E65100;">⚠️ <b>복용 주의</b>: ${desc.caution}</div>
+            descHtml = `<div style="margin:10px 0;display:flex;flex-direction:column;gap:8px;">
+                <fieldset style="border:1.5px solid #4ECDC4;border-radius:10px;padding:8px 12px 10px;margin:0;">
+                    <legend style="font-size:13px;font-weight:700;color:#4ECDC4;padding:0 6px;">💊 약물 효과</legend>
+                    <div style="font-size:14px;color:#2D3436;line-height:1.5;">${desc.effect}</div>
+                </fieldset>
+                <fieldset style="border:1.5px solid #FF8A80;border-radius:10px;padding:8px 12px 10px;margin:0;">
+                    <legend style="font-size:13px;font-weight:700;color:#E65100;padding:0 6px;">⚠️ 복용 주의</legend>
+                    <div style="font-size:14px;color:#E65100;line-height:1.5;">${desc.caution}</div>
+                </fieldset>
             </div>`;
         }
         let details = '';
@@ -1566,4 +1621,79 @@ function deleteBoxEntry(idx) {
     savePillBox(box);
     renderPillBox();
     showToast('🗑️ 삭제되었습니다');
+}
+
+// ═══════════════════════════════════════
+//  모양으로 약 찾기
+// ═══════════════════════════════════════
+
+let selectedShape = '전체';
+let selectedColor = '전체';
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#shape-chips .shape-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('#shape-chips .shape-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            selectedShape = chip.dataset.value;
+        });
+    });
+    document.querySelectorAll('#color-chips .color-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('#color-chips .color-chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            selectedColor = chip.dataset.value;
+        });
+    });
+});
+
+function filterByShape() {
+    const printQuery = (document.getElementById('shape-print-input').value || '').trim().toLowerCase();
+    const results = [];
+
+    for (const [catId, info] of Object.entries(pillDB)) {
+        if (selectedShape !== '전체' && (info.shape || '') !== selectedShape) continue;
+        if (selectedColor !== '전체' && (info.color1 || '') !== selectedColor) continue;
+        if (printQuery) {
+            const front = (info.print_front || '').toLowerCase();
+            const back = (info.print_back || '').toLowerCase();
+            const name = (info.name || '').toLowerCase();
+            if (!front.includes(printQuery) && !back.includes(printQuery) && !name.includes(printQuery)) continue;
+        }
+        results.push({ catId, info });
+    }
+
+    const container = document.getElementById('shape-search-results');
+
+    if (results.length === 0) {
+        container.innerHTML = '<div style="text-align:center;padding:30px;color:#999;font-size:14px;">조건에 맞는 알약이 없습니다.</div>';
+        return;
+    }
+
+    let html = `<div class="shape-result-count">${results.length}개 약품 검색됨</div>`;
+
+    results.forEach(({ catId, info }) => {
+        const stamp = [info.print_front, info.print_back].filter(Boolean).join(' / ');
+        const chart = info.chart || '';
+        const effect = chart ? chart.split('.')[0] + '.' : '';
+
+        html += `
+        <div class="search-card" onclick="showPillDetail(pillDB['${catId}'], '${catId}')" style="margin-bottom:10px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                <img src="/static/pills/${catId}.png" style="width:52px;height:52px;border-radius:14px;object-fit:cover;box-shadow:0 2px 6px rgba(0,0,0,0.08);" onerror="this.style.display='none'">
+                <div style="flex:1;">
+                    <div class="search-card-name">${info.name}</div>
+                    <div class="search-card-sub">${info.company || ''}</div>
+                    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;">
+                        <span style="font-size:10px;color:#666;background:#F1F3F5;padding:2px 8px;border-radius:8px;">${info.color1 || ''} ${info.shape || ''}</span>
+                        ${stamp ? `<span style="font-size:10px;color:#4ECDC4;background:#E8F8F0;padding:2px 8px;border-radius:8px;">${stamp}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+            ${effect ? `<div style="font-size:12px;color:#666;line-height:1.5;padding:8px 10px;background:#F8F9FA;border-radius:10px;border-left:3px solid #4ECDC4;">${effect}</div>` : ''}
+        </div>`;
+    });
+
+    container.innerHTML = html;
+    appLog('모양검색', `${selectedShape}/${selectedColor}/${printQuery} → ${results.length}건`);
 }
