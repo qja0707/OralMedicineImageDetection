@@ -110,8 +110,8 @@ ml/data/raw/images/
 ml/data/raw/annotations/
 ml/data/interim/merged/*.json
 ml/data/interim/splits/*.json
-ml/data/interim/internet_eval/bbox_preview/
-ml/data/interim/internet_eval/augmentation_preview/
+ml/data/interim/internet_train/bbox_preview/
+ml/data/interim/internet_train/augmentation_preview/
 ml/data/processed/
 
 # Training outputs

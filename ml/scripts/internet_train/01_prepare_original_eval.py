@@ -79,8 +79,8 @@ def main():
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=data_root / "interim" / "internet_eval",
-        help="Directory for internet-eval experiment artifacts.",
+        default=data_root / "interim" / "internet_train",
+        help="Directory for internet-train experiment artifacts.",
     )
     args = parser.parse_args()
 

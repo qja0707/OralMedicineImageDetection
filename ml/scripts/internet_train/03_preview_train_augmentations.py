@@ -175,17 +175,17 @@ def main():
     parser.add_argument(
         "--coco-path",
         type=Path,
-        default=data_root / "interim" / "internet_eval" / "internet_train_coco.json",
+        default=data_root / "interim" / "internet_train" / "internet_train_coco.json",
     )
     parser.add_argument(
         "--images-dir",
         type=Path,
-        default=data_root / "raw" / "internet_eval" / "images",
+        default=data_root / "raw" / "internet_train" / "images",
     )
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=data_root / "interim" / "internet_eval" / "augmentation_preview",
+        default=data_root / "interim" / "internet_train" / "augmentation_preview",
     )
     parser.add_argument("--num-samples", type=int, default=20)
     parser.add_argument("--image-size", type=int, default=640)

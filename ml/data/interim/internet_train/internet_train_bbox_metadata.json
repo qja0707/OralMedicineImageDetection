@@ -20,7 +20,7 @@
         138.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/01900_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/01900_bbox.jpg"
   },
   {
     "image_file": "02483.jpg",
@@ -43,7 +43,7 @@
         86.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/02483_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/02483_bbox.jpg"
   },
   {
     "image_file": "03351.jpg",
@@ -66,7 +66,7 @@
         64.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03351_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/03351_bbox.jpg"
   },
   {
     "image_file": "03483.jpg",
@@ -89,7 +89,7 @@
         50.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03483_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/03483_bbox.jpg"
   },
   {
     "image_file": "03544.jpg",
@@ -112,7 +112,7 @@
         98.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03544_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/03544_bbox.jpg"
   },
   {
     "image_file": "03743.jpg",
@@ -135,7 +135,7 @@
         192.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03743_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/03743_bbox.jpg"
   },
   {
     "image_file": "03832.jpg",
@@ -158,7 +158,7 @@
         102.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03832_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/03832_bbox.jpg"
   },
   {
     "image_file": "04543.jpg",
@@ -181,7 +181,7 @@
         90.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/04543_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/04543_bbox.jpg"
   },
   {
     "image_file": "12081.jpg",
@@ -204,7 +204,7 @@
         210.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/12081_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/12081_bbox.jpg"
   },
   {
     "image_file": "12247.jpg",
@@ -227,7 +227,7 @@
         65.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/12247_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/12247_bbox.jpg"
   },
   {
     "image_file": "12778.jpg",
@@ -250,7 +250,7 @@
         91.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/12778_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/12778_bbox.jpg"
   },
   {
     "image_file": "13395.jpg",
@@ -273,7 +273,7 @@
         96.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/13395_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/13395_bbox.jpg"
   },
   {
     "image_file": "13900.jpg",
@@ -296,7 +296,7 @@
         50.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/13900_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/13900_bbox.jpg"
   },
   {
     "image_file": "16232.jpg",
@@ -319,7 +319,7 @@
         101.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16232_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/16232_bbox.jpg"
   },
   {
     "image_file": "16262.jpg",
@@ -342,7 +342,7 @@
         118.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16262_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/16262_bbox.jpg"
   },
   {
     "image_file": "16548.png",
@@ -365,7 +365,7 @@
         312.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16548_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/16548_bbox.jpg"
   },
   {
     "image_file": "16551.jpg",
@@ -388,7 +388,7 @@
         177.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16551_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/16551_bbox.jpg"
   },
   {
     "image_file": "16688.jpg",
@@ -411,7 +411,7 @@
         244.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16688_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/16688_bbox.jpg"
   },
   {
     "image_file": "18147.jpg",
@@ -434,7 +434,7 @@
         71.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/18147_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/18147_bbox.jpg"
   },
   {
     "image_file": "18357.jpg",
@@ -457,7 +457,7 @@
         91.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/18357_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/18357_bbox.jpg"
   },
   {
     "image_file": "19232.jpg",
@@ -480,7 +480,7 @@
         200.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/19232_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/19232_bbox.jpg"
   },
   {
     "image_file": "19552.jpg",
@@ -503,7 +503,7 @@
         231.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/19552_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/19552_bbox.jpg"
   },
   {
     "image_file": "19607.jpg",
@@ -526,7 +526,7 @@
         160.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/19607_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/19607_bbox.jpg"
   },
   {
     "image_file": "19861.jpg",
@@ -549,7 +549,7 @@
         64.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/19861_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/19861_bbox.jpg"
   },
   {
     "image_file": "20014.jpg",
@@ -572,7 +572,7 @@
         140.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/20014_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/20014_bbox.jpg"
   },
   {
     "image_file": "20238.jpg",
@@ -595,7 +595,7 @@
         116.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/20238_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/20238_bbox.jpg"
   },
   {
     "image_file": "20877.jpg",
@@ -618,7 +618,7 @@
         152.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/20877_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/20877_bbox.jpg"
   },
   {
     "image_file": "21325.jpg",
@@ -641,7 +641,7 @@
         76.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/21325_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/21325_bbox.jpg"
   },
   {
     "image_file": "21771.jpg",
@@ -664,7 +664,7 @@
         83.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/21771_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/21771_bbox.jpg"
   },
   {
     "image_file": "22074.jpg",
@@ -687,7 +687,7 @@
         308.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/22074_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/22074_bbox.jpg"
   },
   {
     "image_file": "22347.png",
@@ -710,7 +710,7 @@
         118.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/22347_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/22347_bbox.jpg"
   },
   {
     "image_file": "22362.png",
@@ -727,7 +727,7 @@
         44.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/22362_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/22362_bbox.jpg"
   },
   {
     "image_file": "24850.png",
@@ -744,7 +744,7 @@
         23.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/24850_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/24850_bbox.jpg"
   },
   {
     "image_file": "25367.webp",
@@ -767,7 +767,7 @@
         105.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/25367_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/25367_bbox.jpg"
   },
   {
     "image_file": "25438.png",
@@ -784,7 +784,7 @@
         119.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/25438_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/25438_bbox.jpg"
   },
   {
     "image_file": "25469.jpg",
@@ -807,7 +807,7 @@
         83.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/25469_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/25469_bbox.jpg"
   },
   {
     "image_file": "27733.jpg",
@@ -830,7 +830,7 @@
         78.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/27733_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/27733_bbox.jpg"
   },
   {
     "image_file": "27777.jpg",
@@ -853,7 +853,7 @@
         153.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/27777_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/27777_bbox.jpg"
   },
   {
     "image_file": "27926.jpg",
@@ -876,7 +876,7 @@
         88.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/27926_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/27926_bbox.jpg"
   },
   {
     "image_file": "27993.jpg",
@@ -899,7 +899,7 @@
         60.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/27993_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/27993_bbox.jpg"
   },
   {
     "image_file": "28763.jpg",
@@ -922,7 +922,7 @@
         81.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/28763_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/28763_bbox.jpg"
   },
   {
     "image_file": "29345.png",
@@ -939,7 +939,7 @@
         53.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/29345_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/29345_bbox.jpg"
   },
   {
     "image_file": "29451.jpg",
@@ -962,7 +962,7 @@
         281.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/29451_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/29451_bbox.jpg"
   },
   {
     "image_file": "29667.jpg",
@@ -985,7 +985,7 @@
         85.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/29667_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/29667_bbox.jpg"
   },
   {
     "image_file": "30308.jpg",
@@ -1008,7 +1008,7 @@
         92.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/30308_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/30308_bbox.jpg"
   },
   {
     "image_file": "31863.png",
@@ -1025,7 +1025,7 @@
         40.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/31863_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/31863_bbox.jpg"
   },
   {
     "image_file": "31885.jpg",
@@ -1048,7 +1048,7 @@
         110.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/31885_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/31885_bbox.jpg"
   },
   {
     "image_file": "32310.jpg",
@@ -1071,7 +1071,7 @@
         214.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/32310_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/32310_bbox.jpg"
   },
   {
     "image_file": "33009.jpg",
@@ -1094,7 +1094,7 @@
         75.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/33009_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/33009_bbox.jpg"
   },
   {
     "image_file": "33208.png",
@@ -1111,7 +1111,7 @@
         46.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/33208_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/33208_bbox.jpg"
   },
   {
     "image_file": "33880.jpg",
@@ -1134,7 +1134,7 @@
         100.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/33880_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/33880_bbox.jpg"
   },
   {
     "image_file": "34597.jpg",
@@ -1157,7 +1157,7 @@
         105.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/34597_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/34597_bbox.jpg"
   },
   {
     "image_file": "35206.jpg",
@@ -1180,7 +1180,7 @@
         83.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/35206_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/35206_bbox.jpg"
   },
   {
     "image_file": "36637.jpg",
@@ -1203,7 +1203,7 @@
         162.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/36637_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/36637_bbox.jpg"
   },
   {
     "image_file": "38162.jpg",
@@ -1226,7 +1226,7 @@
         170.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/38162_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/38162_bbox.jpg"
   },
   {
     "image_file": "41768.jpg",
@@ -1249,6 +1249,6 @@
         373.0
       ]
     ],
-    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/41768_bbox.jpg"
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_train/bbox_preview/41768_bbox.jpg"
   }
 ]
