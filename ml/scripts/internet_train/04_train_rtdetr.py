@@ -17,6 +17,24 @@ from ml.src.augment.yolo_augment import get_yolo_train_augmentation
 
 
 COPY_PASTE_AUGMENT_FACTOR = 20
+EXPECTED_COPY_PASTE_METADATA = {
+    "augment_factor": COPY_PASTE_AUGMENT_FACTOR,
+    "object_count_probs": {"2": 0.2, "3": 0.3, "4": 0.5},
+    "same_class_duplicate": False,
+    "color_augmentation": False,
+}
+
+
+def has_expected_copy_paste_metadata(dataset_dir):
+    metadata_path = dataset_dir / "copy_paste_metadata.json"
+    if not metadata_path.exists():
+        return False
+    with open(metadata_path, "r", encoding="utf-8") as file:
+        metadata = json.load(file)
+    for key, expected_value in EXPECTED_COPY_PASTE_METADATA.items():
+        if metadata.get(key) != expected_value:
+            return False
+    return True
 
 
 def ensure_dataset(data_root):
@@ -27,7 +45,11 @@ def ensure_dataset(data_root):
     with open(train_coco_path, "r", encoding="utf-8") as file:
         train_coco = json.load(file)
     expected_copy_paste_count = len(train_coco["images"]) * COPY_PASTE_AUGMENT_FACTOR
-    if yaml_path.exists() and len(copy_paste_labels) >= expected_copy_paste_count:
+    if (
+        yaml_path.exists()
+        and len(copy_paste_labels) >= expected_copy_paste_count
+        and has_expected_copy_paste_metadata(dataset_dir)
+    ):
         return yaml_path
 
     runpy.run_path(
@@ -44,6 +66,16 @@ def train_rtdetr():
     data_root = project_root / "ml" / "data"
     configs_root = project_root / "ml" / "configs"
     data_yaml_path = ensure_dataset(data_root)
+    previous_best_path = (
+        project_root
+        / "ml"
+        / "outputs"
+        / "checkpoints"
+        / "internet_train_rtdetr_l"
+        / "weights"
+        / "best.pt"
+    )
+    model_path = previous_best_path if previous_best_path.exists() else "rtdetr-l.pt"
 
     augmentation = get_yolo_train_augmentation(configs_root / "augment.yaml")
     augmentation.update(
@@ -63,20 +95,21 @@ def train_rtdetr():
         "device": 0 if torch.cuda.is_available() else "cpu",
         "pretrained": True,
         "project": str(project_root / "ml" / "outputs" / "checkpoints"),
-        "name": "internet_train_rtdetr_l",
+        "name": "internet_train_rtdetr_l_multi_object",
         "exist_ok": True,
         "verbose": True,
         "deterministic": False,
         **augmentation,
     }
 
-    model = RTDETR("rtdetr-l.pt")
+    model = RTDETR(str(model_path))
     results = model.train(**train_kwargs)
 
     print("=" * 55)
     print("인터넷 train RT-DETR 학습 완료")
     print("=" * 55)
     print(f"  Dataset YAML       : {data_yaml_path}")
+    print(f"  초기 가중치        : {model_path}")
     print(f"  사용 device        : {train_kwargs['device']}")
     print(f"  학습 결과 디렉터리 : {results.save_dir}")
     print(f"  best.pt            : {results.save_dir / 'weights' / 'best.pt'}")
