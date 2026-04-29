@@ -1,0 +1,1254 @@
+[
+  {
+    "image_file": "01900.jpg",
+    "category_id": 1900,
+    "category_name": "보령부스파정 5mg",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        869.0,
+        242.0,
+        209.0,
+        138.0
+      ],
+      [
+        230.0,
+        243.0,
+        215.0,
+        138.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/01900_bbox.jpg"
+  },
+  {
+    "image_file": "02483.jpg",
+    "category_id": 2483,
+    "category_name": "뮤테란캡슐 100mg",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        265.0,
+        83.0,
+        196.0,
+        86.0
+      ],
+      [
+        32.0,
+        83.0,
+        196.0,
+        86.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/02483_bbox.jpg"
+  },
+  {
+    "image_file": "03351.jpg",
+    "category_id": 3351,
+    "category_name": "일양하이트린정 2mg",
+    "width": 279,
+    "height": 148,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        51.0,
+        39.0,
+        72.0,
+        72.0
+      ],
+      [
+        164.0,
+        41.0,
+        68.0,
+        64.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03351_bbox.jpg"
+  },
+  {
+    "image_file": "03483.jpg",
+    "category_id": 3483,
+    "category_name": "기넥신에프정(은행엽엑스)(수출용)",
+    "width": 600,
+    "height": 470,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        320.0,
+        202.0,
+        80.0,
+        51.0
+      ],
+      [
+        194.0,
+        202.0,
+        80.0,
+        50.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03483_bbox.jpg"
+  },
+  {
+    "image_file": "03544.jpg",
+    "category_id": 3544,
+    "category_name": "무코스타정(레바미피드)(비매품)",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        92.0,
+        77.0,
+        97.0,
+        99.0
+      ],
+      [
+        326.0,
+        78.0,
+        97.0,
+        98.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03544_bbox.jpg"
+  },
+  {
+    "image_file": "03743.jpg",
+    "category_id": 3743,
+    "category_name": "알드린정",
+    "width": 558,
+    "height": 296,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        295.0,
+        46.0,
+        197.0,
+        188.0
+      ],
+      [
+        54.0,
+        48.0,
+        207.0,
+        192.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03743_bbox.jpg"
+  },
+  {
+    "image_file": "03832.jpg",
+    "category_id": 3832,
+    "category_name": "뉴로메드정(옥시라세탐)",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        12.0,
+        67.0,
+        200.0,
+        97.0
+      ],
+      [
+        211.0,
+        66.0,
+        203.0,
+        102.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/03832_bbox.jpg"
+  },
+  {
+    "image_file": "04543.jpg",
+    "category_id": 4543,
+    "category_name": "에어탈정(아세클로페낙)",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        328.0,
+        81.0,
+        87.0,
+        90.0
+      ],
+      [
+        96.0,
+        81.0,
+        85.0,
+        90.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/04543_bbox.jpg"
+  },
+  {
+    "image_file": "12081.jpg",
+    "category_id": 12081,
+    "category_name": "리렉스펜정 300mg/PTP",
+    "width": 780,
+    "height": 426,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        407.0,
+        27.0,
+        342.0,
+        205.0
+      ],
+      [
+        72.0,
+        127.0,
+        342.0,
+        210.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/12081_bbox.jpg"
+  },
+  {
+    "image_file": "12247.jpg",
+    "category_id": 12247,
+    "category_name": "아빌리파이정 10mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        239.0,
+        78.0,
+        102.0,
+        65.0
+      ],
+      [
+        78.0,
+        82.0,
+        101.0,
+        65.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/12247_bbox.jpg"
+  },
+  {
+    "image_file": "12778.jpg",
+    "category_id": 12778,
+    "category_name": "다보타민큐정 10mg/병",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        268.0,
+        85.0,
+        189.0,
+        90.0
+      ],
+      [
+        35.0,
+        84.0,
+        189.0,
+        91.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/12778_bbox.jpg"
+  },
+  {
+    "image_file": "13395.jpg",
+    "category_id": 13395,
+    "category_name": "써스펜8시간이알서방정 650mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        33.0,
+        14.0,
+        224.0,
+        99.0
+      ],
+      [
+        175.0,
+        118.0,
+        216.0,
+        96.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/13395_bbox.jpg"
+  },
+  {
+    "image_file": "13900.jpg",
+    "category_id": 13900,
+    "category_name": "에빅사정(메만틴염산염)(비매품)",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        84.0,
+        101.0,
+        102.0,
+        50.0
+      ],
+      [
+        307.0,
+        101.0,
+        101.0,
+        50.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/13900_bbox.jpg"
+  },
+  {
+    "image_file": "16232.jpg",
+    "category_id": 16232,
+    "category_name": "리피토정 20mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        271.0,
+        66.0,
+        97.0,
+        100.0
+      ],
+      [
+        55.0,
+        65.0,
+        100.0,
+        101.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16232_bbox.jpg"
+  },
+  {
+    "image_file": "16262.jpg",
+    "category_id": 16262,
+    "category_name": "크레스토정 20mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        245.0,
+        55.0,
+        115.0,
+        118.0
+      ],
+      [
+        64.0,
+        55.0,
+        110.0,
+        118.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16262_bbox.jpg"
+  },
+  {
+    "image_file": "16548.png",
+    "category_id": 16548,
+    "category_name": "가바토파정 100mg",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        165.0,
+        196.0,
+        317.0,
+        317.0
+      ],
+      [
+        817.0,
+        199.0,
+        316.0,
+        312.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16548_bbox.jpg"
+  },
+  {
+    "image_file": "16551.jpg",
+    "category_id": 16551,
+    "category_name": "동아가바펜틴정 800mg",
+    "width": 780,
+    "height": 426,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        406.0,
+        17.0,
+        345.0,
+        190.0
+      ],
+      [
+        65.0,
+        160.0,
+        346.0,
+        177.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16551_bbox.jpg"
+  },
+  {
+    "image_file": "16688.jpg",
+    "category_id": 16688,
+    "category_name": "오마코연질캡슐(오메가-3-산에틸에스테르90)",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        42.0,
+        202.0,
+        583.0,
+        244.0
+      ],
+      [
+        625.0,
+        202.0,
+        583.0,
+        244.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/16688_bbox.jpg"
+  },
+  {
+    "image_file": "18147.jpg",
+    "category_id": 18147,
+    "category_name": "리리카캡슐 150mg",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        286.0,
+        87.0,
+        175.0,
+        70.0
+      ],
+      [
+        54.0,
+        86.0,
+        174.0,
+        71.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/18147_bbox.jpg"
+  },
+  {
+    "image_file": "18357.jpg",
+    "category_id": 18357,
+    "category_name": "종근당글리아티린연질캡슐(콜린알포세레이트)",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        300.0,
+        82.0,
+        154.0,
+        90.0
+      ],
+      [
+        39.0,
+        81.0,
+        154.0,
+        91.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/18357_bbox.jpg"
+  },
+  {
+    "image_file": "19232.jpg",
+    "category_id": 19232,
+    "category_name": "콜리네이트연질캡슐 400mg",
+    "width": 780,
+    "height": 426,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        70.0,
+        132.0,
+        322.0,
+        200.0
+      ],
+      [
+        416.0,
+        28.0,
+        321.0,
+        200.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/19232_bbox.jpg"
+  },
+  {
+    "image_file": "19552.jpg",
+    "category_id": 19552,
+    "category_name": "트루비타정 60mg/병",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        89.0,
+        204.0,
+        425.0,
+        232.0
+      ],
+      [
+        735.0,
+        204.0,
+        427.0,
+        231.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/19552_bbox.jpg"
+  },
+  {
+    "image_file": "19607.jpg",
+    "category_id": 19607,
+    "category_name": "스토가정 10mg",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        859.0,
+        244.0,
+        167.0,
+        160.0
+      ],
+      [
+        273.0,
+        244.0,
+        163.0,
+        160.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/19607_bbox.jpg"
+  },
+  {
+    "image_file": "19861.jpg",
+    "category_id": 19861,
+    "category_name": "노바스크정 5mg",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        104.0,
+        87.0,
+        83.0,
+        72.0
+      ],
+      [
+        321.0,
+        94.0,
+        90.0,
+        64.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/19861_bbox.jpg"
+  },
+  {
+    "image_file": "20014.jpg",
+    "category_id": 20014,
+    "category_name": "마도파정",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        242.0,
+        44.0,
+        140.0,
+        141.0
+      ],
+      [
+        50.0,
+        46.0,
+        139.0,
+        140.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/20014_bbox.jpg"
+  },
+  {
+    "image_file": "20238.jpg",
+    "category_id": 20238,
+    "category_name": "플라빅스정 75mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        62.0,
+        53.0,
+        108.0,
+        115.0
+      ],
+      [
+        269.0,
+        53.0,
+        113.0,
+        116.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/20238_bbox.jpg"
+  },
+  {
+    "image_file": "20877.jpg",
+    "category_id": 20877,
+    "category_name": "엑스포지정 5/160mg",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        744.0,
+        243.0,
+        340.0,
+        151.0
+      ],
+      [
+        156.0,
+        240.0,
+        335.0,
+        152.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/20877_bbox.jpg"
+  },
+  {
+    "image_file": "21325.jpg",
+    "category_id": 21325,
+    "category_name": "아토르바정 10mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        60.0,
+        80.0,
+        117.0,
+        71.0
+      ],
+      [
+        255.0,
+        77.0,
+        112.0,
+        76.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/21325_bbox.jpg"
+  },
+  {
+    "image_file": "21771.jpg",
+    "category_id": 21771,
+    "category_name": "라비에트정 20mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        66.0,
+        70.0,
+        85.0,
+        85.0
+      ],
+      [
+        286.0,
+        72.0,
+        84.0,
+        83.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/21771_bbox.jpg"
+  },
+  {
+    "image_file": "22074.jpg",
+    "category_id": 22074,
+    "category_name": "리피로우정 20mg",
+    "width": 780,
+    "height": 426,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        414.0,
+        31.0,
+        304.0,
+        309.0
+      ],
+      [
+        65.0,
+        32.0,
+        306.0,
+        308.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/22074_bbox.jpg"
+  },
+  {
+    "image_file": "22347.png",
+    "category_id": 22347,
+    "category_name": "자누비아정 50mg",
+    "width": 600,
+    "height": 271,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        151.0,
+        73.0,
+        111.0,
+        118.0
+      ],
+      [
+        386.0,
+        73.0,
+        108.0,
+        118.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/22347_bbox.jpg"
+  },
+  {
+    "image_file": "22362.png",
+    "category_id": 22362,
+    "category_name": "맥시부펜이알정 300mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 1,
+    "bboxes": [
+      [
+        177.0,
+        97.0,
+        76.0,
+        44.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/22362_bbox.jpg"
+  },
+  {
+    "image_file": "24850.png",
+    "category_id": 24850,
+    "category_name": "놀텍정 10mg",
+    "width": 272,
+    "height": 176,
+    "num_bboxes": 1,
+    "bboxes": [
+      [
+        111.0,
+        79.0,
+        43.0,
+        23.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/24850_bbox.jpg"
+  },
+  {
+    "image_file": "25367.webp",
+    "category_id": 25367,
+    "category_name": "자누메트정 50/850mg",
+    "width": 500,
+    "height": 210,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        244.0,
+        105.0,
+        217.0,
+        101.0
+      ],
+      [
+        37.0,
+        0.0,
+        217.0,
+        105.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/25367_bbox.jpg"
+  },
+  {
+    "image_file": "25438.png",
+    "category_id": 25438,
+    "category_name": "큐시드정 31.5mg/PTP",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 1,
+    "bboxes": [
+      [
+        56.0,
+        52.0,
+        119.0,
+        119.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/25438_bbox.jpg"
+  },
+  {
+    "image_file": "25469.jpg",
+    "category_id": 25469,
+    "category_name": "아모잘탄정 5/100mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        237.0,
+        71.0,
+        166.0,
+        86.0
+      ],
+      [
+        33.0,
+        74.0,
+        167.0,
+        83.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/25469_bbox.jpg"
+  },
+  {
+    "image_file": "27733.jpg",
+    "category_id": 27733,
+    "category_name": "트윈스타정 40/5mg",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        277.0,
+        83.0,
+        148.0,
+        78.0
+      ],
+      [
+        61.0,
+        82.0,
+        145.0,
+        78.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/27733_bbox.jpg"
+  },
+  {
+    "image_file": "27777.jpg",
+    "category_id": 27777,
+    "category_name": "카나브정 60mg",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        305.0,
+        235.0,
+        185.0,
+        155.0
+      ],
+      [
+        750.0,
+        238.0,
+        190.0,
+        153.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/27777_bbox.jpg"
+  },
+  {
+    "image_file": "27926.jpg",
+    "category_id": 27926,
+    "category_name": "울트라셋이알서방정",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        292.0,
+        82.0,
+        181.0,
+        88.0
+      ],
+      [
+        19.0,
+        82.0,
+        180.0,
+        88.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/27926_bbox.jpg"
+  },
+  {
+    "image_file": "27993.jpg",
+    "category_id": 27993,
+    "category_name": "졸로푸트정 100mg",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        77.0,
+        95.0,
+        137.0,
+        59.0
+      ],
+      [
+        280.0,
+        95.0,
+        130.0,
+        60.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/27993_bbox.jpg"
+  },
+  {
+    "image_file": "28763.jpg",
+    "category_id": 28763,
+    "category_name": "트라젠타정(리나글립틴)",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        111.0,
+        85.0,
+        79.0,
+        82.0
+      ],
+      [
+        301.0,
+        85.0,
+        80.0,
+        81.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/28763_bbox.jpg"
+  },
+  {
+    "image_file": "29345.png",
+    "category_id": 29345,
+    "category_name": "비모보정 500/20mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 1,
+    "bboxes": [
+      [
+        167.0,
+        86.0,
+        104.0,
+        53.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/29345_bbox.jpg"
+  },
+  {
+    "image_file": "29451.jpg",
+    "category_id": 29451,
+    "category_name": "레일라정",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        679.0,
+        47.0,
+        567.0,
+        282.0
+      ],
+      [
+        120.0,
+        270.0,
+        563.0,
+        281.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/29451_bbox.jpg"
+  },
+  {
+    "image_file": "29667.jpg",
+    "category_id": 29667,
+    "category_name": "리바로정 4mg",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        315.0,
+        82.0,
+        80.0,
+        85.0
+      ],
+      [
+        91.0,
+        82.0,
+        84.0,
+        85.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/29667_bbox.jpg"
+  },
+  {
+    "image_file": "30308.jpg",
+    "category_id": 30308,
+    "category_name": "트라젠타듀오정 2.5/850mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        20.0,
+        64.0,
+        175.0,
+        93.0
+      ],
+      [
+        225.0,
+        65.0,
+        172.0,
+        92.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/30308_bbox.jpg"
+  },
+  {
+    "image_file": "31863.png",
+    "category_id": 31863,
+    "category_name": "아질렉트정(라사길린메실산염)",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 1,
+    "bboxes": [
+      [
+        188.0,
+        92.0,
+        43.0,
+        40.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/31863_bbox.jpg"
+  },
+  {
+    "image_file": "31885.jpg",
+    "category_id": 31885,
+    "category_name": "자누메트엑스알서방정 100/1000mg",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        18.0,
+        72.0,
+        209.0,
+        109.0
+      ],
+      [
+        265.0,
+        71.0,
+        209.0,
+        110.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/31885_bbox.jpg"
+  },
+  {
+    "image_file": "32310.jpg",
+    "category_id": 32310,
+    "category_name": "글리아타민연질캡슐",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        109.0,
+        214.0,
+        381.0,
+        215.0
+      ],
+      [
+        760.0,
+        214.0,
+        379.0,
+        214.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/32310_bbox.jpg"
+  },
+  {
+    "image_file": "33009.jpg",
+    "category_id": 33009,
+    "category_name": "신바로정",
+    "width": 512,
+    "height": 279,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        301.0,
+        89.0,
+        140.0,
+        75.0
+      ],
+      [
+        52.0,
+        89.0,
+        139.0,
+        75.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/33009_bbox.jpg"
+  },
+  {
+    "image_file": "33208.png",
+    "category_id": 33208,
+    "category_name": "에스원엠프정 20mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 1,
+    "bboxes": [
+      [
+        190.0,
+        89.0,
+        45.0,
+        46.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/33208_bbox.jpg"
+  },
+  {
+    "image_file": "33880.jpg",
+    "category_id": 33880,
+    "category_name": "글리틴정(콜린알포세레이트)",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        196.0,
+        103.0,
+        192.0,
+        103.0
+      ],
+      [
+        36.0,
+        23.0,
+        190.0,
+        100.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/33880_bbox.jpg"
+  },
+  {
+    "image_file": "34597.jpg",
+    "category_id": 34597,
+    "category_name": "제미메트서방정 50/1000mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        20.0,
+        14.0,
+        209.0,
+        106.0
+      ],
+      [
+        189.0,
+        111.0,
+        211.0,
+        105.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/34597_bbox.jpg"
+  },
+  {
+    "image_file": "35206.jpg",
+    "category_id": 35206,
+    "category_name": "아토젯정 10/40mg",
+    "width": 421,
+    "height": 223,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        169.0,
+        115.0,
+        195.0,
+        80.0
+      ],
+      [
+        53.0,
+        30.0,
+        190.0,
+        83.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/35206_bbox.jpg"
+  },
+  {
+    "image_file": "36637.jpg",
+    "category_id": 36637,
+    "category_name": "로수젯정10/5밀리그램",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        794.0,
+        240.0,
+        270.0,
+        162.0
+      ],
+      [
+        183.0,
+        240.0,
+        272.0,
+        162.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/36637_bbox.jpg"
+  },
+  {
+    "image_file": "38162.jpg",
+    "category_id": 38162,
+    "category_name": "로수바미브정 10/20mg",
+    "width": 1299,
+    "height": 709,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        179.0,
+        236.0,
+        269.0,
+        169.0
+      ],
+      [
+        785.0,
+        236.0,
+        273.0,
+        170.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/38162_bbox.jpg"
+  },
+  {
+    "image_file": "41768.jpg",
+    "category_id": 41768,
+    "category_name": "카발린캡슐 25mg",
+    "width": 2323,
+    "height": 2323,
+    "num_bboxes": 2,
+    "bboxes": [
+      [
+        672.0,
+        1341.0,
+        982.0,
+        373.0
+      ],
+      [
+        662.0,
+        666.0,
+        980.0,
+        373.0
+      ]
+    ],
+    "preview_file": "/Users/gyubeom/workspace/OralMedicineImageDetection/ml/data/interim/internet_eval/bbox_preview/41768_bbox.jpg"
+  }
+]
