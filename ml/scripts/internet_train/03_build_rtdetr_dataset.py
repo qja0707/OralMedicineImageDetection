@@ -239,6 +239,7 @@ def add_copy_paste_train_samples(
     augment_factor=DEFAULT_AUGMENT_FACTOR,
     image_size=DEFAULT_IMAGE_SIZE,
     seed=DEFAULT_SEED,
+    target_size = 190
 ):
     coco = load_json(coco_path)
     images_dir = Path(images_dir)
@@ -273,7 +274,25 @@ def add_copy_paste_train_samples(
 
         for category_id in selected_categories:
             source = py_rng.choice(objects_by_category[category_id])
+            # 1. 일단 객체를 원본 크기로 가져옵니다. (또는 기존 증강 적용)
             resized, resized_bbox = augment_object(source, rng)
+            
+            
+            
+            # 3. 현재 박스의 가로, 세로 중 긴 쪽을 찾습니다.
+            curr_h, curr_w = resized.shape[:2]
+            long_side = max(curr_h, curr_w)
+            
+            # 4. 고정 크기에 맞추기 위한 비율(Scale) 계산
+            # 여기에 약간의 랜덤성(0.9~1.1)을 곱하면 너무 기계적이지 않고 자연스러워집니다.
+            scale = (target_size / long_side) * rng.uniform(0.9, 1.1)
+            
+            # 5. 최종 리사이즈
+            new_w, new_h = int(curr_w * scale), int(curr_h * scale)
+            resized = cv2.resize(resized, (new_w, new_h))
+            
+            # 6. 박스 정보 업데이트 (YOLO 등 저장을 위해 전체 크기로 갱신)
+            resized_bbox = [0, 0, new_w, new_h]
             background, pasted_bbox = paste_crop(
                 background,
                 resized,
