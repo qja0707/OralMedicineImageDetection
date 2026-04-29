@@ -5,6 +5,8 @@ from the prepared COCO files.
 """
 
 from pathlib import Path
+import json
+import runpy
 import sys
 
 
@@ -12,21 +14,25 @@ project_root = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(project_root))
 
 from ml.src.augment.yolo_augment import get_yolo_train_augmentation
-from ml.src.data.build_yolo_dataset import build_yolo_dataset
+
+
+COPY_PASTE_AUGMENT_FACTOR = 20
 
 
 def ensure_dataset(data_root):
     dataset_dir = data_root / "processed" / "internet_train_rtdetr"
     yaml_path = dataset_dir / "pill.yaml"
-    if yaml_path.exists():
+    copy_paste_labels = list((dataset_dir / "labels" / "train").glob("copy_paste_*.txt"))
+    train_coco_path = data_root / "interim" / "internet_train" / "internet_train_coco.json"
+    with open(train_coco_path, "r", encoding="utf-8") as file:
+        train_coco = json.load(file)
+    expected_copy_paste_count = len(train_coco["images"]) * COPY_PASTE_AUGMENT_FACTOR
+    if yaml_path.exists() and len(copy_paste_labels) >= expected_copy_paste_count:
         return yaml_path
 
-    build_yolo_dataset(
-        train_coco_path=data_root / "interim" / "internet_train" / "internet_train_coco.json",
-        val_coco_path=data_root / "interim" / "internet_train" / "original_eval_coco.json",
-        train_images_dir=data_root / "raw" / "internet_train" / "images",
-        val_images_dir=data_root / "raw" / "images",
-        output_dir=dataset_dir,
+    runpy.run_path(
+        str(project_root / "ml" / "scripts" / "internet_train" / "03_build_rtdetr_dataset.py"),
+        run_name="__main__",
     )
     return yaml_path
 
@@ -40,11 +46,19 @@ def train_rtdetr():
     data_yaml_path = ensure_dataset(data_root)
 
     augmentation = get_yolo_train_augmentation(configs_root / "augment.yaml")
+    augmentation.update(
+        {
+            "hsv_h": 0.0,
+            "hsv_s": 0.0,
+            "hsv_v": 0.0,
+            "copy_paste": 0.0,
+        }
+    )
     train_kwargs = {
         "data": str(data_yaml_path),
-        "epochs": 100,
+        "epochs": 150,
         "batch": 16,
-        "patience": 20,
+        "patience": 40,
         "workers": 8,
         "device": 0 if torch.cuda.is_available() else "cpu",
         "pretrained": True,
