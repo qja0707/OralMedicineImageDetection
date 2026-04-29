@@ -110,21 +110,33 @@ def write_data_yaml(output_dir, yolo_names):
 def build_yolo_dataset(
     train_coco_path,
     val_coco_path,
-    raw_images_dir,
-    output_dir,
+    raw_images_dir=None,
+    output_dir=None,
+    train_images_dir=None,
+    val_images_dir=None,
     verbose=True,
 ):
     train_coco = load_json(train_coco_path)
     val_coco = load_json(val_coco_path)
 
-    raw_images_dir = Path(raw_images_dir)
+    if raw_images_dir is not None:
+        raw_images_dir = Path(raw_images_dir)
+    train_images_dir = Path(train_images_dir) if train_images_dir is not None else raw_images_dir
+    val_images_dir = Path(val_images_dir) if val_images_dir is not None else raw_images_dir
+    if train_images_dir is None or val_images_dir is None:
+        raise ValueError("Provide either raw_images_dir or both train_images_dir and val_images_dir")
+    if output_dir is None:
+        raise ValueError("Provide output_dir")
+
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     (output_dir / "images").mkdir(parents=True, exist_ok=True)
     (output_dir / "labels").mkdir(parents=True, exist_ok=True)
 
-    if not raw_images_dir.exists():
-        raise FileNotFoundError(f"Raw images directory not found: {raw_images_dir}")
+    if not train_images_dir.exists():
+        raise FileNotFoundError(f"Train images directory not found: {train_images_dir}")
+    if not val_images_dir.exists():
+        raise FileNotFoundError(f"Val images directory not found: {val_images_dir}")
 
     def log(message):
         if verbose:
@@ -138,12 +150,14 @@ def build_yolo_dataset(
     log(f"  Train 이미지 수    : {len(train_coco['images'])}개")
     log(f"  Val 이미지 수      : {len(val_coco['images'])}개")
     log(f"  클래스 수          : {len(yolo_names)}개")
+    log(f"  Train 이미지 경로  : {train_images_dir}")
+    log(f"  Val 이미지 경로    : {val_images_dir}")
 
     train_stats = write_yolo_labels(
         split_coco=train_coco,
         split_name="train",
         output_dir=output_dir,
-        raw_images_dir=raw_images_dir,
+        raw_images_dir=train_images_dir,
         coco_to_yolo=coco_to_yolo,
         verbose=verbose,
     )
@@ -151,7 +165,7 @@ def build_yolo_dataset(
         split_coco=val_coco,
         split_name="val",
         output_dir=output_dir,
-        raw_images_dir=raw_images_dir,
+        raw_images_dir=val_images_dir,
         coco_to_yolo=coco_to_yolo,
         verbose=verbose,
     )
@@ -179,7 +193,12 @@ def main():
     parser = argparse.ArgumentParser(description="Build YOLO dataset from split COCO files.")
     parser.add_argument("--train-coco-path", required=True)
     parser.add_argument("--val-coco-path", required=True)
-    parser.add_argument("--raw-images-dir", required=True)
+    parser.add_argument(
+        "--raw-images-dir",
+        help="Image directory shared by train and val. Kept for backward compatibility.",
+    )
+    parser.add_argument("--train-images-dir", help="Train image directory.")
+    parser.add_argument("--val-images-dir", help="Val image directory.")
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
@@ -187,8 +206,10 @@ def main():
     build_yolo_dataset(
         train_coco_path=args.train_coco_path,
         val_coco_path=args.val_coco_path,
-        raw_images_dir=args.raw_images_dir,
         output_dir=args.output_dir,
+        raw_images_dir=args.raw_images_dir,
+        train_images_dir=args.train_images_dir,
+        val_images_dir=args.val_images_dir,
         verbose=not args.quiet,
     )
 
