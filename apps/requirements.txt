@@ -6,3 +6,4 @@ numpy
 opencv-python-headless
 python-multipart
 google-genai
+python-dotenv

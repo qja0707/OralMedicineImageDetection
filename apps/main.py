@@ -9,20 +9,29 @@ import os
 from pathlib import Path
 from PIL import Image
 import io
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).parent
+load_dotenv(BASE_DIR / ".env")
+
 MODEL_PATH = BASE_DIR / "models" / "best.pt"
+CLASS_MAPPING_PATH = BASE_DIR / "models" / "jaecheol_class_mapping.json"
 PILL_DB_PATH = BASE_DIR / "pill_info.json"
 CONFIDENCE = 0.40
 
 # 약품 DB
 pill_db = {}
 index_to_catid = {}
+class_mapping = {}
 if PILL_DB_PATH.exists():
     with open(PILL_DB_PATH, encoding="utf-8") as f:
         pill_db = json.load(f)
     sorted_ids = sorted(pill_db.keys(), key=lambda x: int(x))
     index_to_catid = {i: cid for i, cid in enumerate(sorted_ids)}
+
+if CLASS_MAPPING_PATH.exists():
+    with open(CLASS_MAPPING_PATH, encoding="utf-8") as f:
+        class_mapping = {int(k): str(v) for k, v in json.load(f).items()}
 
 # 모델
 model = None
@@ -37,7 +46,7 @@ load_model()
 
 
 def resolve_pill_info(cls_id):
-    cid = index_to_catid.get(cls_id)
+    cid = class_mapping.get(cls_id) or index_to_catid.get(cls_id)
     if cid and cid in pill_db:
         return pill_db[cid]
     if model:
@@ -128,7 +137,13 @@ async def detect(file: UploadFile = File(...)):
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "model_loaded": model is not None, "pills": len(pill_db)}
+    return {
+        "status": "ok",
+        "model_loaded": model is not None,
+        "pills": len(pill_db),
+        "class_mapping": CLASS_MAPPING_PATH.name if class_mapping else "pill_info_numeric_order",
+        "mapped_classes": len(class_mapping) if class_mapping else len(index_to_catid),
+    }
 
 
 # Gemini AI 약사 채팅
