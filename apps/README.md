@@ -15,13 +15,29 @@
 
 ### 1. 모델 파일 준비
 
-약 이미지 탐지 기능을 사용하려면 학습된 YOLO weight 파일을 아래 경로에 둡니다.
+약 이미지 탐지 기능을 사용하려면 학습된 모델 weight와 클래스 매핑 파일을 아래 경로에 둡니다.
 
-```bash
+```text
 apps/models/best.pt
+apps/models/real_category_mapping.json
 ```
 
-모델 파일이 없으면 서버는 실행되지만 `/api/detect`는 `Model not loaded` 오류를 반환합니다.
+모델 파일과 매핑 파일은 Hugging Face 저장소에서 받을 수 있습니다.
+
+```text
+https://huggingface.co/GyubeomPark/OralMedicineImageDetection
+```
+
+저장소 루트에서 다음 명령을 실행하면 `apps/models/` 아래로 다운로드됩니다.
+
+```bash
+curl -L -o apps/models/best.pt \
+  https://huggingface.co/GyubeomPark/OralMedicineImageDetection/resolve/main/best.pt
+curl -L -o apps/models/real_category_mapping.json \
+  https://huggingface.co/GyubeomPark/OralMedicineImageDetection/resolve/main/real_category_mapping.json
+```
+
+모델 파일이 없으면 서버는 실행되지만 `/api/detect`는 `Model not loaded` 오류를 반환합니다. 매핑 파일이 없으면 `pill_info.json`의 숫자 순서를 기준으로 클래스가 매핑되므로, 새로 학습한 모델을 사용할 때는 `real_category_mapping.json`도 함께 준비해야 합니다.
 
 ### 2. 로컬 실행
 
