@@ -6,7 +6,7 @@
 ._*
 
 # Custom folder icons
-Icon
+Icon
 
 # Volume root files
 .DocumentRevisions-V100
@@ -81,6 +81,7 @@ dist/
 ml/.env
 ml/.env.*
 !ml/.env.example
+!apps/.env.example
 
 # Virtual environments
 .venv
@@ -109,6 +110,7 @@ htmlcov/
 ml/data/raw/images/
 ml/data/raw/annotations/
 ml/data/interim/merged/*.json
+!ml/data/interim/merged/jaecheol_category_mapping.json
 ml/data/interim/splits/*.json
 ml/data/interim/internet_train/bbox_preview/
 ml/data/interim/internet_train/augmentation_preview/
@@ -134,3 +136,12 @@ models/exported/*.bin
 wandb/
 runs/
 logs/
+
+### 개인 작업 문서 (git 업로드 금지)
+작업일지*.txt
+사용설명서*.txt
+Daily_협업일지*.txt
+
+### 모델 파일 (GitHub 용량 제한)
+*.pt
+webapp_docker/models/

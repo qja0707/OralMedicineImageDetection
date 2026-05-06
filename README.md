@@ -38,8 +38,13 @@ AI 모델을 활용하여 경구약제 객체를 탐지하는 프로젝트입니
 
 ```text
 apps/
-  main.py              모델 추론 결과를 사용하는 서비스 진입점
-  static/              서비스 정적 자산
+  main.py              FastAPI 기반 PillScope 서비스 진입점
+  README.md            앱 실행, 모델 파일 준비, Docker 실행 안내
+  requirements.txt     앱 실행용 Python 의존성
+  Dockerfile           앱 컨테이너 빌드 설정
+  pill_info.json       서비스에서 사용하는 약품 메타데이터
+  models/              앱 추론용 모델 weight와 클래스 매핑 파일
+  static/              프론트엔드 정적 파일, 이미지 자산, 약 이미지
 ml/
   data/                원본, 중간 산출물, 학습용 데이터셋
   notebooks/           EDA 및 실험 노트북
@@ -53,6 +58,7 @@ models/
 shared/
   schemas/             앱과 ML이 공유하는 스키마
   utils/               공용 유틸리티
+members/               개인 작업 공간
 ```
 
 ## 작업 원칙
@@ -60,5 +66,6 @@ shared/
 - 원본 데이터는 `ml/data/raw`에만 둡니다.
 - 통합 COCO와 split 산출물은 `ml/data/interim`에서 관리합니다.
 - 최종 학습 포맷은 `ml/data/processed`에 생성합니다.
-- 서비스 코드는 `apps/inference_service`에서만 관리합니다.
+- 현재 서비스 코드는 `apps/`에서 관리합니다.
 - 기존 개인 작업물은 `members/`에 유지하고, 공용 작업은 새 루트 구조를 기준으로 이어갑니다.
+- 모델 weight 같은 대용량 파일은 Git에 직접 커밋하지 않고 Hugging Face 등 외부 저장소에서 받아 `apps/models/` 또는 `models/`에 배치합니다.
