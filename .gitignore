@@ -81,6 +81,7 @@ dist/
 ml/.env
 ml/.env.*
 !ml/.env.example
+!apps/.env.example
 
 # Virtual environments
 .venv
@@ -109,6 +110,7 @@ htmlcov/
 ml/data/raw/images/
 ml/data/raw/annotations/
 ml/data/interim/merged/*.json
+!ml/data/interim/merged/jaecheol_category_mapping.json
 ml/data/interim/splits/*.json
 ml/data/processed/
 
