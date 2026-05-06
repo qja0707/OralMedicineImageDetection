@@ -1,8 +1,8 @@
 from pathlib import Path
 import sys
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(PROJECT_ROOT))
+project_root = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(project_root))
 
 from ml.src.data.build_yolo_classification_dataset import (
     build_yolo_classification_dataset_from_sources,
@@ -10,7 +10,7 @@ from ml.src.data.build_yolo_classification_dataset import (
 
 
 def main():
-    data_root = PROJECT_ROOT / "ml" / "data"
+    data_root = project_root / "ml" / "data"
 
     sources = [
         {
