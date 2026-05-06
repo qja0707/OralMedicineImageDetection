@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).parent
 load_dotenv(BASE_DIR / ".env")
 
 MODEL_PATH = BASE_DIR / "models" / "best.pt"
-CLASS_MAPPING_PATH = BASE_DIR / "models" / "jaecheol_class_mapping.json"
+CLASS_MAPPING_PATH = BASE_DIR / "models" / "real_category_mapping.json"
 PILL_DB_PATH = BASE_DIR / "pill_info.json"
 CONFIDENCE = 0.40
 
@@ -31,7 +31,8 @@ if PILL_DB_PATH.exists():
 
 if CLASS_MAPPING_PATH.exists():
     with open(CLASS_MAPPING_PATH, encoding="utf-8") as f:
-        class_mapping = {int(k): str(v) for k, v in json.load(f).items()}
+        mapping_dict = json.load(f)["idx_to_real_category_id"]
+        class_mapping = {int(k): str(v) for k, v in mapping_dict.items()}
 
 # 모델
 model = None
