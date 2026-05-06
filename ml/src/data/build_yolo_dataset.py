@@ -33,7 +33,16 @@ def build_category_mappings(categories):
     return coco_to_yolo, yolo_names
 
 
-def write_yolo_labels(split_coco, split_name, output_dir, raw_images_dir, coco_to_yolo, verbose, target_size=640):
+def write_yolo_labels(
+    split_coco,
+    split_name,
+    output_dir,
+    raw_images_dir,
+    coco_to_yolo,
+    verbose,
+    target_size=640,
+    single_class=False,
+):
     split_images_dir = output_dir / "images" / split_name
     split_labels_dir = output_dir / "labels" / split_name
     clear_split_dir(split_images_dir)
@@ -80,7 +89,7 @@ def write_yolo_labels(split_coco, split_name, output_dir, raw_images_dir, coco_t
         label_lines = []
         for annotation in annotations_by_image.get(image["id"], []):
             x, y, aw, ah = annotation["bbox"]
-            yolo_class_id = coco_to_yolo[annotation["category_id"]]
+            yolo_class_id = 0 if single_class else coco_to_yolo[annotation["category_id"]]
 
             # 레터박스가 적용된 이미지에서의 새로운 중심점 계산
             # 원본 좌표 -> 리사이즈 좌표 -> 패딩 더하기 -> 640으로 나누기
@@ -126,6 +135,8 @@ def build_yolo_dataset(
     output_dir=None,
     train_images_dir=None,
     val_images_dir=None,
+    single_class_name=None,
+    target_size=640,
     verbose=True,
 ):
     train_coco = load_json(train_coco_path)
@@ -154,7 +165,14 @@ def build_yolo_dataset(
         if verbose:
             print(message)
 
-    coco_to_yolo, yolo_names = build_category_mappings(train_coco["categories"])
+    if single_class_name:
+        coco_to_yolo = {
+            category["id"]: 0
+            for category in train_coco["categories"]
+        }
+        yolo_names = [single_class_name]
+    else:
+        coco_to_yolo, yolo_names = build_category_mappings(train_coco["categories"])
 
     log("=" * 55)
     log("1단계: split COCO 기반 YOLO 데이터셋 생성 중...")
@@ -172,6 +190,8 @@ def build_yolo_dataset(
         raw_images_dir=train_images_dir,
         coco_to_yolo=coco_to_yolo,
         verbose=verbose,
+        target_size=target_size,
+        single_class=bool(single_class_name),
     )
     val_stats = write_yolo_labels(
         split_coco=val_coco,
@@ -180,6 +200,8 @@ def build_yolo_dataset(
         raw_images_dir=val_images_dir,
         coco_to_yolo=coco_to_yolo,
         verbose=verbose,
+        target_size=target_size,
+        single_class=bool(single_class_name),
     )
 
     yaml_path = write_data_yaml(output_dir, yolo_names)
@@ -212,6 +234,8 @@ def main():
     parser.add_argument("--train-images-dir", help="Train image directory.")
     parser.add_argument("--val-images-dir", help="Val image directory.")
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--single-class-name")
+    parser.add_argument("--target-size", type=int, default=640)
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
 
@@ -222,6 +246,8 @@ def main():
         raw_images_dir=args.raw_images_dir,
         train_images_dir=args.train_images_dir,
         val_images_dir=args.val_images_dir,
+        single_class_name=args.single_class_name,
+        target_size=args.target_size,
         verbose=not args.quiet,
     )
 
