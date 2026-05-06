@@ -1,5 +1,5 @@
 yolo:
-  model: yolo11m.pt
+  model: yolo11l.pt
   epochs: 100
   batch: 16
   patience: 20
@@ -7,6 +7,6 @@ yolo:
   device: null
   pretrained: true
   project: ml/outputs/checkpoints
-  name: yolo11m_baseline
+  name: yolo11l_baseline
   exist_ok: true
   verbose: true
