@@ -1,71 +1,144 @@
-# OralMedicineImageDetection
+# 헬스잇 — 경구약제 이미지 객체 검출
 
-## 프로젝트 개요
-AI 모델을 활용하여 경구약제 객체를 탐지하는 프로젝트입니다. 이미지 데이터에서 최대 4개의 경구약제를 식별하고 위치를 검출하는 객체 탐지 모델을 구현과 성능 개선을 목표로 합니다.
+> **[AI10] 경구약제 이미지 객체 검출 대회** | Kaggle mAP@[0.75:0.95] = **0.93552**
 
-## 프로젝트 목표
-경구약제 이미지에서 객체를 정확하게 탐지할 수 있는 AI 모델을 구축하고, 이를 통해 약제 식별 자동화 가능성을 확인합니다.
+알약 사진 한 장으로 약품명·성분·효능·주의사항을 즉시 확인하는 AI 탐지 시스템입니다.
 
 ---
 
-## 개발 환경 및 실행 방법
-### Apps
+## 프로젝트 구조
 
-서비스 실행 및 앱 개발 관련 내용은 [apps/README.md](apps/README.md)를 참고합니다.
-
-### ML
-
-데이터 다운로드, COCO 병합, split, YOLO 데이터셋 생성, 학습/검증 등 ML 파이프라인은 [ml/README.md](ml/README.md)를 참고합니다.
-
-
----
-
-## 일정
-2026년 4월 20일 ~ 2026년 5월 11일
-
-## 팀원 및 역할
-| 역할 | 이름 |
-| --- | --- |
-| Project Manager | 안은남 |
-| Experimentation Lead | 박재철 |
-| Interface Lead | 이진호 |
-| Data Engineer/Model Architect | 하태진, 박규범 |
-
-## 결과
-추후 작성 예정
-
-## 디렉터리 구조
-
-```text
-apps/
-  main.py              FastAPI 기반 PillScope 서비스 진입점
-  README.md            앱 실행, 모델 파일 준비, Docker 실행 안내
-  requirements.txt     앱 실행용 Python 의존성
-  Dockerfile           앱 컨테이너 빌드 설정
-  pill_info.json       서비스에서 사용하는 약품 메타데이터
-  models/              앱 추론용 모델 weight와 클래스 매핑 파일
-  static/              프론트엔드 정적 파일, 이미지 자산, 약 이미지
-ml/
-  data/                원본, 중간 산출물, 학습용 데이터셋
-  notebooks/           EDA 및 실험 노트북
-  src/                 데이터 전처리, 증강, 학습 코드
-  configs/             데이터/학습 설정
-  scripts/             순차 실행용 진입 스크립트
-  outputs/             로그, 시각화, 체크포인트
-models/
-  yolo/                학습된 weight
-  exported/            ONNX/TorchScript 등 배포용 모델
-shared/
-  schemas/             앱과 ML이 공유하는 스키마
-  utils/               공용 유틸리티
-members/               개인 작업 공간
+```
+📦 초급 프로젝트/
+├── output/
+│   ├── pill.yaml                   # YOLO 학습 설정
+│   ├── train_coco.json             # COCO 형식 통합 라벨
+│   ├── category_mapping.json       # 클래스 인덱스 매핑
+│   ├── real_category_mapping.json  # 실제 category_id 매핑
+│   └── dataset/
+│       ├── images/
+│       │   ├── train/              # 학습 이미지
+│       │   └── val/                # 검증 이미지 (46장)
+│       └── labels/
+│           ├── train/              # YOLO txt 라벨
+│           └── val/
+├── internet_augment.py             # 인터넷 이미지 파란 배경 합성
+├── minority_augment.py             # 소수 클래스 Crop & Paste 증강
+├── pseudo_labeling.py              # Pseudo Labeling 재학습
+├── make_submission.py              # 단일 모델 제출 CSV 생성
+├── ensemble_submission.py          # 3모델 WBF 앙상블 제출
+├── requirements.txt
+└── README.md
 ```
 
-## 작업 원칙
+---
 
-- 원본 데이터는 `ml/data/raw`에만 둡니다.
-- 통합 COCO와 split 산출물은 `ml/data/interim`에서 관리합니다.
-- 최종 학습 포맷은 `ml/data/processed`에 생성합니다.
-- 현재 서비스 코드는 `apps/`에서 관리합니다.
-- 기존 개인 작업물은 `members/`에 유지하고, 공용 작업은 새 루트 구조를 기준으로 이어갑니다.
-- 모델 weight 같은 대용량 파일은 Git에 직접 커밋하지 않고 Hugging Face 등 외부 저장소에서 받아 `apps/models/` 또는 `models/`에 배치합니다.
+## 실험 결과 요약
+
+| 실험 | 모델 | 데이터 | mAP@0.75:0.95 | Kaggle |
+|------|------|--------|--------------|--------|
+| 1차 | YOLOv11s/m, RT-DETRv2 | 186장 | - | - |
+| 2차 | YOLOv11l | 186장 | - | - |
+| 3차 | YOLOv8l, YOLOv11l | 1026장 | 0.919 | - |
+| 4차 | YOLOv11l | 1866장 | 0.916 | - |
+| **5차 ★** | **YOLOv11l** | **1116장** | **0.936** | **0.863** |
+| 6차 | RT-DETRv2 | 1206장 | 0.883 | - |
+| 7차 | RF-DETRv3 | 186장 | 0.882 | - |
+| 앙상블 | YOLO+RTDETR+RFDETR WBF | - | - | **0.93552** |
+
+---
+
+## 환경 설정
+
+```bash
+# 가상환경 생성
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+source .venv/bin/activate     # Linux/Mac
+
+# 패키지 설치
+pip install -r requirements.txt
+```
+
+---
+
+## 데이터 증강
+
+### 1. Minority Augment (소수 클래스 증강)
+```bash
+python minority_augment.py
+# 186장 → 1026장 (소수 클래스 Crop & Paste)
+```
+
+### 2. 인터넷 이미지 합성
+```bash
+python internet_augment.py
+# 파란 배경에 알약 RGBA 이미지 합성
+# 1026장 → 1116~1206장
+```
+
+---
+
+## 모델 학습
+
+### YOLOv11l (메인 모델)
+```bash
+# 5차 실험 기준 (최고 성능)
+from ultralytics import YOLO
+model = YOLO("yolo11l.pt")
+model.train(
+    data="output/pill.yaml",
+    epochs=150,
+    imgsz=1280,
+    batch=4,
+    device=0,
+)
+```
+
+---
+
+## 제출 파일 생성
+
+### 단일 모델 제출
+```bash
+python make_submission.py
+```
+
+### 3모델 WBF 앙상블 제출 (최고 점수)
+```bash
+python ensemble_submission.py
+# YOLOv11l + RT-DETRv2 + RF-DETRv3 WBF
+# conf=0.01, iou_thr=0.55, weight=1:1:1
+# → Kaggle mAP 0.93552
+```
+
+---
+
+## 모델 가중치
+
+대용량 파일로 GitHub에 포함되지 않습니다.
+
+| 모델 | 파일명 | 비고 |
+|------|--------|------|
+| YOLOv11l 5차 | `exp_yolo11l_final/weights/best.pt` | 단일 최고 성능 |
+| RT-DETRv2 | `exp_rtdetr_retrain/weights/best_1206.pt` | 앙상블 사용 |
+| RF-DETRv3 | `exp_rfdetr_v3/checkpoint_best_regular.pth` | 앙상블 사용 |
+
+---
+
+## 팀 구성
+
+| 이름 | 담당 |
+|------|------|
+| 은남 | 서론, EDA, 결론 |
+| 규범 | 데이터 전처리, 증강 |
+| 재철 | 모델 실험, 앙상블, 성능 분석 |
+| 진호 | 어플리케이션 (PillScope) |
+
+---
+
+## 어플리케이션
+
+**PillScope** — HuggingFace Spaces 배포
+
+카메라 한 장으로 알약의 이름·성분·효능·주의사항까지 즉시 확인하는 모바일 웹 플랫폼
