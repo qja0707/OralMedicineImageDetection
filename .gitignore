@@ -1,0 +1,11 @@
+﻿*.pt
+*.pth
+*.ckpt
+output/dataset/
+output/rfdetr_dataset*/
+output/runs/
+.venv/
+__pycache__/
+*.pyc
+.env
+mlruns/
