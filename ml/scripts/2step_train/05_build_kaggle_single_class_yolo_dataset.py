@@ -35,7 +35,8 @@ def main():
     build_yolo_dataset(
         train_coco_path=train_coco_path,
         val_coco_path=val_coco_path,
-        raw_images_dir=data_root / "raw" / "images",
+        train_images_dir=data_root / "raw" / "images",
+        val_images_dir=data_root / "raw" / "images",
         output_dir=data_root / "processed" / "yolo_single_class",
         single_class_name="pill",
         target_size=640,

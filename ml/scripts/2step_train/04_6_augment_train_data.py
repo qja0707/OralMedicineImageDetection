@@ -7,9 +7,12 @@ data_root = project_root / "ml" / "data"
 
 from ml.src.augment.bbox_augment import bbox_augment
 
+img_path = str(data_root / "processed" / "yolo_single_class" / "images" / "train")
+ann_path = str(data_root / "processed" / "yolo_single_class" / "labels" / "train")
+
 def main():
     
-    bbox_augment()
+    bbox_augment(img_path, ann_path)
 
 
 if __name__ == "__main__":
