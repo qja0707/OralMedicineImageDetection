@@ -36,18 +36,24 @@
 
                 <div class="search-bar">
                     <span class="search-icon">🔍</span>
-                    <input type="text" id="search-input" class="search-input" placeholder="약 이름, 성분, 제약사 검색">
+                    <input type="text" id="search-input" class="search-input" placeholder="약 이름·증상으로 검색 (예: 두통, 배아파)">
                 </div>
                 <div id="search-results"></div>
 
                 <div class="main-buttons">
-                    <div class="main-btn-wrapper" onclick="openCamera()">
-                        <img src="/static/img/photo.png" class="main-btn-img" alt="약 사진촬영">
+                    <div class="main-btn-left" onclick="showPage('identify-select')">
+                        <img src="/static/img/camera_button.png" alt="알약 식별">
                     </div>
-                    <div class="main-btn-wrapper" onclick="openUpload()">
-                        <img src="/static/img/upload.png" class="main-btn-img" alt="약 사진 업로드">
+                    <div class="main-btn-right">
+                        <div onclick="openUpload()">
+                            <img src="/static/img/upload_button.png" alt="사진 업로드">
+                        </div>
+                        <div onclick="showPage('shape-search')">
+                            <img src="/static/img/prescription_button.png" alt="모양으로 찾기">
+                        </div>
                     </div>
                 </div>
+                <input type="file" id="ocr-input" accept="image/*" style="display:none">
             </div>
 
             <div class="content-area">
@@ -59,30 +65,16 @@
                 </div>
 
                 <div class="folder-tabs">
-                    <div class="folder-tab active" onclick="switchFolder(0, this)">안전정보</div>
+                    <div class="folder-tab active" onclick="switchFolder(0, this)">건강식품</div>
                     <div class="folder-tab" onclick="switchFolder(1, this)">추천정보</div>
                     <div class="folder-tab" onclick="switchFolder(2, this)">복용팁</div>
                 </div>
                 <div class="folder-content">
                     <div class="folder-panel active" id="folder-0">
-                        <div class="warning-card">
-                            <span class="warning-badge">Warning</span>
-                            <span class="warning-text">[약 A]와 [약 B]는 병용금기입니다. 확인하세요.</span>
-                        </div>
-                        <div class="warning-card">
-                            <span class="warning-badge">Warning</span>
-                            <span class="warning-text">[약 C]는 공복에 복용하세요.</span>
-                        </div>
+                        <div id="supplement-grid" class="supplement-grid"></div>
                     </div>
                     <div class="folder-panel" id="folder-1">
-                        <div class="info-card">
-                            <span class="info-badge">💰</span>
-                            <span class="info-text">가성비 대체약이 있을 수 있습니다. AI 약사에게 상담해보세요.</span>
-                        </div>
-                        <div class="info-card">
-                            <span class="info-badge">📋</span>
-                            <span class="info-text">제네릭 의약품은 같은 성분으로 가격이 30~70% 저렴합니다.</span>
-                        </div>
+                        <div id="recommend-cards"></div>
                     </div>
                     <div class="folder-panel" id="folder-2">
                         <div class="info-card">
@@ -99,6 +91,27 @@
 
             <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none">
             <input type="file" id="upload-input" accept="image/*" style="display:none">
+        </div>
+
+        <!-- ===== 식별 선택 ===== -->
+        <div id="page-identify-select" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">💊 알약 식별하기</div>
+            <div class="identify-select-content">
+                <p class="identify-desc">식별 방법을 선택하세요</p>
+                <div class="identify-options">
+                    <div class="identify-option" onclick="openCamera()">
+                        <div class="identify-icon">📷</div>
+                        <div class="identify-label">알약</div>
+                        <div class="identify-sub">카메라로 알약을 촬영합니다</div>
+                    </div>
+                    <div class="identify-option" onclick="document.getElementById('ocr-input').click()">
+                        <div class="identify-icon">📋</div>
+                        <div class="identify-label">처방전</div>
+                        <div class="identify-sub">처방전 사진을 업로드합니다</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- ===== 웹캠 촬영 ===== -->
@@ -163,6 +176,26 @@
             </div>
         </div>
 
+        <!-- ===== 추천 칼럼 ===== -->
+        <div id="page-article" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header" id="article-header">건강 칼럼</div>
+            <div class="article-content" id="article-content"></div>
+        </div>
+
+        <!-- ===== 건강식품 상세 ===== -->
+        <div id="page-supplement-detail" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">
+                <img id="sup-detail-thumb" src="" style="width:28px;height:28px;border-radius:6px;vertical-align:middle;margin-right:8px;">
+                <span id="sup-detail-name">건강식품</span>
+                <span id="sup-detail-tag" style="font-size:11px;color:#4ECDC4;margin-left:8px;"></span>
+            </div>
+            <div style="padding:0 16px;overflow-y:auto;">
+                <img src="/static/img/supplement_detail.png" style="width:100%;border-radius:12px;margin-top:8px;" alt="상세정보">
+            </div>
+        </div>
+
         <!-- ===== 약상자 ===== -->
         <div id="page-pillbox" class="page">
             <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
@@ -204,6 +237,18 @@
                     <span style="color:#CCC;font-size:18px;">›</span>
                 </div>
 
+                <!-- 검출 모델 -->
+                <div class="section-title">🤖 검출 모델</div>
+                <div class="mypage-card">
+                    <div class="setting-row">
+                        <span class="setting-label">사용 모델</span>
+                        <select id="model-select" class="model-select" onchange="switchModel()">
+                            <option>로딩중...</option>
+                        </select>
+                    </div>
+                    <div id="model-status" style="font-size:12px;color:#999;margin-top:4px;"></div>
+                </div>
+
                 <!-- 설정 -->
                 <div class="section-title">⚙️ 설정</div>
                 <div class="mypage-card">
@@ -218,6 +263,10 @@
                     <div class="setting-row">
                         <span class="setting-label">약상자 전체 삭제</span>
                         <button class="setting-delete-btn" onclick="clearAllPillBox()">삭제</button>
+                    </div>
+                    <div class="setting-row">
+                        <span class="setting-label">사용 로그 저장</span>
+                        <button class="setting-delete-btn" style="background:#4ECDC4;" onclick="exportLogs()">다운로드</button>
                     </div>
                     <div class="setting-row">
                         <span class="setting-label">앱 버전</span>
@@ -262,6 +311,51 @@
                     <input type="text" id="edit-symptom-custom" class="edit-input" placeholder="기타 증상 직접 입력" style="margin-top:8px;">
                 </div>
                 <button class="btn-save-profile" onclick="saveProfile()">저장</button>
+            </div>
+        </div>
+
+        <!-- ===== 모양으로 약 찾기 ===== -->
+        <div id="page-shape-search" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">⬠ 모양으로 약 찾기</div>
+            <div style="padding:0 16px;">
+                <p style="color:#999;font-size:13px;margin:0 0 14px;">모양, 색상, 각인으로 약을 찾아보세요</p>
+
+                <div class="shape-section">
+                    <label class="shape-label">🔤 각인 문자</label>
+                    <input type="text" id="shape-print-input" class="shape-text-input" placeholder="알약에 적힌 글자 (예: NR800, Airtal)">
+                </div>
+
+                <div class="shape-section">
+                    <label class="shape-label">⬠ 모양</label>
+                    <div class="shape-chips" id="shape-chips">
+                        <button class="shape-chip active" data-value="전체"><span class="shape-icon">⊕</span>전체</button>
+                        <button class="shape-chip" data-value="원형"><span class="shape-icon">●</span>원형</button>
+                        <button class="shape-chip" data-value="타원형"><span class="shape-icon">⬬</span>타원형</button>
+                        <button class="shape-chip" data-value="장방형"><span class="shape-icon">▬</span>장방형</button>
+                        <button class="shape-chip" data-value="육각형"><span class="shape-icon">⬡</span>육각형</button>
+                        <button class="shape-chip" data-value="팔각형"><span class="shape-icon">⯃</span>팔각형</button>
+                    </div>
+                </div>
+
+                <div class="shape-section">
+                    <label class="shape-label">🎨 색상</label>
+                    <div class="color-chips" id="color-chips">
+                        <button class="color-chip active" data-value="전체"><span class="color-dot" style="background:conic-gradient(#FF6B6B,#FFD43B,#51CF66,#339AF0,#CC5DE8,#FF6B6B);"></span>전체</button>
+                        <button class="color-chip" data-value="하양"><span class="color-dot" style="background:#F5F5F5;border:1px solid #D0D0D0;"></span>하양</button>
+                        <button class="color-chip" data-value="노랑"><span class="color-dot" style="background:#FFD43B;"></span>노랑</button>
+                        <button class="color-chip" data-value="주황"><span class="color-dot" style="background:#FF922B;"></span>주황</button>
+                        <button class="color-chip" data-value="분홍"><span class="color-dot" style="background:#F06595;"></span>분홍</button>
+                        <button class="color-chip" data-value="갈색"><span class="color-dot" style="background:#8B6914;"></span>갈색</button>
+                        <button class="color-chip" data-value="초록"><span class="color-dot" style="background:#51CF66;"></span>초록</button>
+                        <button class="color-chip" data-value="파랑"><span class="color-dot" style="background:#339AF0;"></span>파랑</button>
+                        <button class="color-chip" data-value="연두"><span class="color-dot" style="background:#A9E34B;"></span>연두</button>
+                    </div>
+                </div>
+
+                <button class="shape-search-go" onclick="filterByShape()">🔍 검색하기</button>
+
+                <div id="shape-search-results"></div>
             </div>
         </div>
 

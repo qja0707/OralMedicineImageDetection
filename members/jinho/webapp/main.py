@@ -11,7 +11,7 @@ from PIL import Image
 import io
 
 BASE_DIR = Path(__file__).parent
-MODEL_PATH = BASE_DIR / "models" / "best.pt"
+MODELS_DIR = BASE_DIR / "models"
 PILL_DB_PATH = BASE_DIR / "pill_info.json"
 CONFIDENCE = 0.40
 
@@ -26,13 +26,23 @@ if PILL_DB_PATH.exists():
 
 # 모델
 model = None
-def load_model():
-    global model
-    if MODEL_PATH.exists():
+current_model_name = ""
+
+def load_model(name="best.pt"):
+    global model, current_model_name
+    path = MODELS_DIR / name
+    if path.exists():
         from ultralytics import YOLO
-        model = YOLO(str(MODEL_PATH))
+        model = YOLO(str(path))
         dummy = np.zeros((640, 480, 3), dtype=np.uint8)
         model(dummy, imgsz=640, conf=0.99, verbose=False)
+        current_model_name = name
+
+def get_model_list():
+    if not MODELS_DIR.exists():
+        return []
+    return sorted([f.name for f in MODELS_DIR.iterdir() if f.suffix == ".pt"])
+
 load_model()
 
 
@@ -95,24 +105,26 @@ async def detect(file: UploadFile = File(...)):
     from PIL import ImageDraw, ImageFont
     annotated_pil = Image.fromarray(img_array)
     draw = ImageDraw.Draw(annotated_pil)
+    FONT_SIZE = 20
     try:
-        font = ImageFont.truetype("malgunbd.ttf", 40)
+        font = ImageFont.truetype("malgunbd.ttf", FONT_SIZE)
     except OSError:
         try:
-            font = ImageFont.truetype("malgun.ttf", 40)
+            font = ImageFont.truetype("/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf", FONT_SIZE)
         except OSError:
             try:
-                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 36)
+                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", FONT_SIZE)
             except OSError:
                 font = ImageFont.load_default()
 
+    label_h = FONT_SIZE + 10
     for det in detections:
         x1, y1, x2, y2 = det["bbox"]
         name = det["name"]
-        draw.rectangle([x1, y1, x2, y2], outline="#4ECDC4", width=5)
-        tw = draw.textlength(name, font=font) if hasattr(draw, 'textlength') else len(name) * 22
-        draw.rectangle([x1, y1 - 52, x1 + tw + 16, y1], fill="white", outline="#4ECDC4", width=2)
-        draw.text((x1 + 8, y1 - 50), name, fill="#2D3436", font=font)
+        draw.rectangle([x1, y1, x2, y2], outline="#4ECDC4", width=3)
+        tw = draw.textlength(name, font=font) if hasattr(draw, 'textlength') else len(name) * 12
+        draw.rectangle([x1, y1 - label_h, x1 + tw + 12, y1], fill="white", outline="#4ECDC4", width=2)
+        draw.text((x1 + 6, y1 - label_h + 3), name, fill="#2D3436", font=font)
 
     import base64
     buf = io.BytesIO()
@@ -131,13 +143,80 @@ async def health():
     return {"status": "ok", "model_loaded": model is not None, "pills": len(pill_db)}
 
 
+@app.get("/api/models")
+async def list_models():
+    models = get_model_list()
+    return JSONResponse({"models": models, "current": current_model_name})
+
+
+class ModelSwitch(BaseModel):
+    name: str
+
+@app.post("/api/models/switch")
+async def switch_model(req: ModelSwitch):
+    path = MODELS_DIR / req.name
+    if not path.exists() or path.suffix != ".pt":
+        return JSONResponse({"error": "모델을 찾을 수 없습니다"}, status_code=404)
+    try:
+        load_model(req.name)
+        return JSONResponse({"success": True, "current": current_model_name})
+    except Exception as e:
+        return JSONResponse({"error": f"모델 로드 실패: {str(e)[:80]}"}, status_code=500)
+
+
+# 처방전 OCR
+ocr_reader = None
+def load_ocr():
+    global ocr_reader
+    try:
+        import easyocr
+        ocr_reader = easyocr.Reader(['ko', 'en'], gpu=False, verbose=False)
+    except Exception:
+        pass
+
+@app.post("/api/ocr")
+async def ocr_prescription(file: UploadFile = File(...)):
+    if ocr_reader is None:
+        load_ocr()
+    if ocr_reader is None:
+        return JSONResponse({"error": "OCR 모듈을 로드할 수 없습니다"}, status_code=500)
+
+    contents = await file.read()
+    img = Image.open(io.BytesIO(contents)).convert("RGB")
+    img_array = np.array(img)
+
+    results = ocr_reader.readtext(img_array)
+
+    ocr_texts = [text for _, text, conf in results if conf > 0.3]
+    all_text = ' '.join(ocr_texts)
+
+    matched = []
+    for cid, info in pill_db.items():
+        name = info["name"]
+        short = name.split("(")[0].replace(" ", "")
+        if len(short) < 2:
+            continue
+        for ocr_t in ocr_texts:
+            clean = ocr_t.replace(" ", "")
+            if short[:4] in clean or clean in short:
+                if cid not in [m["catId"] for m in matched]:
+                    matched.append({"catId": cid, "name": name, "info": info, "ocrText": ocr_t})
+                break
+
+    return JSONResponse({
+        "ocrTexts": ocr_texts,
+        "matched": matched,
+        "count": len(matched),
+    })
+
+
 # Gemini AI 약사 채팅
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
 
 PHARMACIST_PROMPTS = {
     "kim": "당신은 베테랑 약사 김원장입니다. 30년 경력의 꼼꼼하고 신중한 약사입니다. 항상 정확한 정보를 제공하며, 존댓말을 사용합니다. 환자의 건강을 최우선으로 생각합니다.",
     "lee": "당신은 젊은 약사 이준입니다. 친절하고 편안한 말투로 상담합니다. 어려운 의학 용어를 쉽게 풀어서 설명합니다. 이모티콘을 가끔 사용합니다.",
-    "park": "당신은 따뜻한 약사 박미소입니다. 어르신들에게 '어머님', '아버님'으로 호칭하며, 따뜻하고 다정한 말투를 사용합니다. 쉬운 말로 천천히 설명합니다.",
+    "park": "당신은 따뜻한 약사 박미소입니다. 따뜻하고 다정한 말투를 사용합니다. 쉬운 말로 천천히 설명합니다. 환자의 이름이 주어지면 '님'을 붙여 호칭하고, 이름이 없으면 '환자분'으로 호칭합니다.",
     "choi": "당신은 전문가 약사 최유진입니다. 정확하고 체계적으로 답변합니다. 근거 기반으로 설명하며, 필요시 주의사항을 꼭 언급합니다.",
 }
 
@@ -147,6 +226,7 @@ class ChatRequest(BaseModel):
     history: list = []
     user_symptoms: list = []
     current_meds: list = []
+    user_name: str = ""
 
 @app.post("/api/chat")
 async def chat(req: ChatRequest):
@@ -167,6 +247,12 @@ async def chat(req: ChatRequest):
         system_prompt += "\n5. 환자의 기저질환과 현재 복용 약을 반드시 고려합니다."
         system_prompt += "\n6. 대화를 이어가며 환자의 상태를 파악합니다. 한 번에 끝내지 않습니다."
         system_prompt += "\n7. 답변 마지막에 항상 후속 질문을 합니다."
+        system_prompt += "\n8. 약 이름을 언급할 때는 반드시 **약이름** 형태로 볼드 표시합니다. (예: **마그밀정**, **타이레놀정**)"
+        system_prompt += "\n9. 상담 중 증상에 맞는 건강기능식품도 자연스럽게 추천합니다. 고혈압→코큐텐/홍국, 당뇨→바나바잎/여주, 간→밀크시슬, 위장→프로바이오틱스/매스틱, 알레르기→퀘르세틴, 임산부→프리나탈. 예: '참고로 **코큐텐**도 혈압 관리에 도움이 됩니다. 홈 화면 건강식품 탭에서 확인해보세요!' 처럼 대화 끝에 슬쩍 언급합니다."
+        system_prompt += "\n10. 건강기능식품 추천 시 너무 강하게 권하지 말고 '참고로', '혹시 관심 있으시면', '도움이 될 수 있는' 같은 부드러운 표현을 사용합니다."
+
+        if req.user_name:
+            system_prompt += f"\n\n환자 이름: {req.user_name}. 이름을 불러주세요."
 
         if req.user_symptoms:
             system_prompt += f"\n\n환자의 기저질환: {', '.join(req.user_symptoms)}. 이를 반드시 고려하여 약 추천 및 주의사항을 안내하세요."
