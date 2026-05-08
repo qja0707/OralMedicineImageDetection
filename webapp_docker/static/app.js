@@ -1045,6 +1045,187 @@ function loadProfile() {
     // 홈 인사말 반영
     const greetEl = document.querySelector('.greeting-text');
     if (greetEl) greetEl.textContent = `안녕하세요, ${p.name || '민수'}님`;
+
+    // 건강식품 + 추천정보 렌더링
+    renderSupplements(symptoms);
+    renderRecommends(symptoms);
+}
+
+const SP = '/static/img/supplements/';
+const supplementDB = {
+    '고혈압': [
+        {name: '코큐텐', tag: '심장·혈압 건강', img: SP+'코큐텐.png'},
+        {name: '홍국', tag: '콜레스테롤 관리', img: SP+'홍국.png'},
+        {name: '은행잎 추출물', tag: '혈행 개선', img: SP+'은행잎.png'},
+    ],
+    '당뇨': [
+        {name: '바나바잎', tag: '혈당 관리', img: SP+'바나바.png'},
+        {name: '여주 추출물', tag: '천연 인슐린', img: SP+'여주.png'},
+        {name: '상엽 추출물', tag: '식후 혈당 조절', img: SP+'상엽.png'},
+    ],
+    '간질환': [
+        {name: '밀크시슬', tag: '간세포 보호', img: SP+'밀크시슬.png'},
+        {name: '씨슬파워', tag: '간 해독 강화', img: SP+'씨슬파워.png'},
+        {name: '민들레 추출물', tag: '간 기능 개선', img: SP+'민들레엑스.png'},
+    ],
+    '신장질환': [
+        {name: '키드니포뮬러', tag: '신장 기능 보호', img: SP+'키드니포믈러.png'},
+        {name: '네틀포스', tag: '이뇨·신장 건강', img: SP+'네틀포스.png'},
+        {name: '코디세핀', tag: '신장 세포 보호', img: SP+'코디세핀.png'},
+    ],
+    '위장 약함': [
+        {name: '프로바이오틱스', tag: '장내 유익균', img: SP+'프로바이오틱스.png'},
+        {name: '매스틱', tag: '위점막 보호', img: SP+'매스틱.png'},
+        {name: '프리바이오틱스', tag: '유익균 먹이', img: SP+'프리바이오2.png'},
+    ],
+    '알레르기': [
+        {name: '퀘르세틴', tag: '항히스타민 효과', img: SP+'퀘르세틴.png'},
+        {name: '퀘르세틴 포스', tag: '알레르기 완화', img: SP+'퀘르세틴-포스.png'},
+        {name: '프로바이오틱스', tag: '면역 균형', img: SP+'프로바이오틱스.png'},
+    ],
+    '임산부': [
+        {name: '프리나탈', tag: '엽산·철분 복합', img: SP+'프리나탈.png'},
+        {name: '프리나탈코어', tag: '임산부 핵심영양', img: SP+'프리나탈코어.png'},
+        {name: '멀티비타민', tag: '종합 영양 보충', img: SP+'멀티비타민.png'},
+    ],
+    '_default': [
+        {name: '멀티비타민', tag: '기본 건강 관리', img: SP+'멀티비타민.png'},
+        {name: '프로바이오틱스', tag: '장건강·면역', img: SP+'프로바이오틱스.png'},
+        {name: '코큐텐', tag: '항산화·에너지', img: SP+'코큐텐.png'},
+        {name: '헛깨 추출물', tag: '간 건강·숙취', img: SP+'헛깨.png'},
+        {name: '은행잎 추출물', tag: '혈행·기억력', img: SP+'은행잎.png'},
+        {name: '밀크시슬', tag: '간세포 보호', img: SP+'밀크시슬.png'},
+    ],
+};
+
+const recommendDB = {
+    '고혈압': [
+        {title: '코큐텐, 혈압약과 함께 드셔보세요', desc: '코큐텐은 혈압약의 부작용인 근육통을 완화하고, 심장 에너지 대사를 도와줍니다. 매일 100mg 권장.'},
+        {title: '홍국으로 콜레스테롤을 자연스럽게', desc: '모나콜린K 성분이 나쁜 콜레스테롤(LDL)을 낮춰줍니다. 스타틴 계열 약과 병용 시 주의.'},
+    ],
+    '당뇨': [
+        {title: '바나바잎, 천연 혈당 관리의 시작', desc: '바나바잎의 코로솔산 성분이 식후 혈당 상승을 완만하게 도와줍니다.'},
+        {title: '여주가 천연 인슐린이라 불리는 이유', desc: '여주의 카란틴 성분이 인슐린과 유사한 작용으로 혈당 조절에 도움을 줍니다.'},
+    ],
+    '간질환': [
+        {title: '밀크시슬, 간 건강의 대명사', desc: '실리마린 성분이 간세포를 보호하고 재생을 촉진합니다. 음주 전후 섭취도 효과적.'},
+        {title: '민들레가 간 해독을 돕는다?', desc: '민들레 추출물은 담즙 분비를 촉진하여 간의 자연 해독 과정을 도와줍니다.'},
+    ],
+    '신장질환': [
+        {title: '신장 건강, 미리 챙기셔야 합니다', desc: '키드니포뮬러는 신장 기능 유지에 필요한 핵심 영양소를 복합 배합하였습니다.'},
+        {title: '코디세핀으로 신장 세포 보호', desc: '동충하초 유래 코디세핀이 신장 세포의 산화 스트레스를 줄여줍니다.'},
+    ],
+    '위장 약함': [
+        {title: '유산균이 면역의 70%를 좌우합니다', desc: '장내 유익균 균형이 면역력의 핵심입니다. 100억 CFU 이상의 프로바이오틱스를 추천합니다.'},
+        {title: '매스틱검으로 위점막을 지키세요', desc: '그리스 키오스섬의 천연 수지 매스틱이 위벽을 코팅하여 속쓰림을 완화합니다.'},
+    ],
+    '알레르기': [
+        {title: '퀘르세틴, 천연 항히스타민제', desc: '양파·사과에 풍부한 퀘르세틴이 히스타민 분비를 억제하여 알레르기 증상을 완화합니다.'},
+        {title: '유산균으로 면역 균형을 잡으세요', desc: '장내 환경 개선이 알레르기 체질 개선의 첫걸음입니다.'},
+    ],
+    '임산부': [
+        {title: '프리나탈, 임신 준비부터 출산까지', desc: '엽산 800mcg + 철분 + DHA를 한 번에. 태아 신경관 발달에 필수적인 영양소입니다.'},
+        {title: '임산부 멀티비타민, 꼭 드셔야 하나요?', desc: '임신 중에는 평소보다 철분 2배, 엽산 4배가 필요합니다. 식사만으로는 부족합니다.'},
+    ],
+    '_default': [
+        {title: '멀티비타민, 하루 한 알로 기본 충전', desc: '불규칙한 식사로 부족한 13가지 비타민과 미네랄을 한 번에 채워줍니다.'},
+        {title: '유산균이 면역의 70%를 좌우합니다', desc: '장내 유익균 균형이 면역력의 핵심입니다. 100억 CFU 이상의 프로바이오틱스를 추천합니다.'},
+        {title: '코큐텐, 30대부터 줄어드는 에너지원', desc: '체내 코큐텐은 30대부터 급감합니다. 심장·피부·에너지 대사에 필수적인 항산화 영양소.'},
+        {title: '헛깨, 간이 피로할 때 드세요', desc: '헛깨나무 추출물이 알코올 분해를 도와 숙취 해소와 간 보호에 효과적입니다.'},
+        {title: '은행잎이 혈액순환을 돕습니다', desc: '플라보노이드와 테르펜 성분이 말초 혈액순환을 개선하고 기억력 유지에 도움을 줍니다.'},
+        {title: '밀크시슬로 간세포를 지키세요', desc: '실리마린 성분이 간세포막을 보호하고 재생을 촉진합니다. 음주 잦은 분께 필수.'},
+    ],
+};
+
+function renderSupplements(symptoms) {
+    const grid = document.getElementById('supplement-grid');
+    if (!grid) return;
+    let items = [];
+    (symptoms || []).forEach(s => {
+        const key = Object.keys(supplementDB).find(k => s.includes(k));
+        if (key) items.push(...supplementDB[key]);
+    });
+    if (items.length === 0) items = supplementDB['_default'];
+    items = items.slice(0, 6);
+    grid.innerHTML = items.map(item => `
+        <div class="supplement-card" onclick="openSupplementDetail('${item.name}', '${item.tag}', '${item.img}')">
+            <img src="${item.img}" alt="${item.name}">
+            <div class="sup-info">
+                <div class="sup-name">${item.name}</div>
+                <div class="sup-tag">${item.tag}</div>
+            </div>
+            <span class="sup-arrow">›</span>
+        </div>
+    `).join('');
+}
+
+const articleDB = {
+    '_default': {
+        title: '간 건강의 든든한 수호자, 밀크씨슬',
+        subtitle: '식약처 인정 간 건강 기능성 원료',
+        hero: '/static/img/article_milkthistle.png',
+        product: {name: '밀크시슬', img: SP+'밀크시슬.png'},
+        sections: [
+            {icon: '🛡', heading: '간세포 보호 및 재생 촉진', text: '실리마린의 강력한 항산화 작용이 체내 활성산소로부터 간세포 파괴를 막아줍니다. 또한, 단백질 합성을 촉진하여 이미 손상된 간 조직이 빠르게 재생될 수 있도록 돕습니다.'},
+            {icon: '⚡', heading: '탁월한 해독 작용과 피로 회복', text: '체내에 들어온 독소나 알코올을 분해하는 간의 필수 해독 기능을 지원합니다. 잦은 야근과 스트레스, 음주로 인해 축적된 현대인들의 만성 피로와 숙취를 개선하는 데 탁월한 효과가 있습니다.'},
+            {icon: '💊', heading: '염증 완화', text: '체내 염증 반응을 유발하는 물질의 생성을 억제하여 간염 등 다양한 질환을 예방하는 데 도움을 줄 수 있습니다.'},
+        ],
+        highlight: "'침묵의 장기'라 불리는 간은 신경 세포가 적어 기능이 절반 이상 저하될 때까지 뚜렷한 증상이 나타나지 않습니다. 식약처로부터 간 건강 기능성을 인정받은 밀크씨슬을 통해 지친 일상 속 활력을 되찾고 간 건강을 미리 챙겨보세요!",
+    },
+};
+
+function openArticle(title) {
+    const article = articleDB['_default'];
+    const el = document.getElementById('article-content');
+    el.innerHTML = `
+        <img class="article-hero" src="${article.hero}" alt="">
+        <div class="article-title">${article.title}</div>
+        <div class="article-subtitle">${article.subtitle}</div>
+        ${article.sections.map(s => `
+            <div class="article-section">
+                <h3><span class="sec-icon">${s.icon}</span>${s.heading}</h3>
+                <p>${s.text}</p>
+            </div>
+        `).join('')}
+        <div class="article-highlight"><p>${article.highlight}</p></div>
+        <div class="supplement-card" onclick="openSupplementDetail('${article.product.name}', '', '${article.product.img}')" style="margin:12px 0;">
+            <img src="${article.product.img}" alt="">
+            <div class="sup-info">
+                <div class="sup-name">${article.product.name}</div>
+                <div class="sup-tag">제품 상세보기 →</div>
+            </div>
+        </div>
+    `;
+    document.getElementById('article-header').textContent = '건강 칼럼';
+    showPage('article');
+}
+
+function openSupplementDetail(name, tag, img) {
+    showPage('supplement-detail');
+    document.getElementById('sup-detail-name').textContent = name;
+    document.getElementById('sup-detail-tag').textContent = tag;
+    document.getElementById('sup-detail-thumb').src = img;
+}
+
+function renderRecommends(symptoms) {
+    const container = document.getElementById('recommend-cards');
+    if (!container) return;
+    let items = [];
+    (symptoms || []).forEach(s => {
+        const key = Object.keys(recommendDB).find(k => s.includes(k));
+        if (key) items.push(...recommendDB[key]);
+    });
+    if (items.length === 0) items = recommendDB['_default'];
+    container.innerHTML = items.map(item => `
+        <div class="recommend-card" onclick="openArticle('${item.title}')">
+            <span class="rec-icon">💊</span>
+            <div class="rec-info">
+                <div class="rec-title">${item.title}</div>
+                <div class="rec-desc">${item.desc}</div>
+            </div>
+            <span class="rec-arrow">›</span>
+        </div>
+    `).join('');
 }
 
 function openEditProfile() {

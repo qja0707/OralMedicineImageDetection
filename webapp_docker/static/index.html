@@ -37,20 +37,19 @@
                 <div class="search-bar">
                     <span class="search-icon">🔍</span>
                     <input type="text" id="search-input" class="search-input" placeholder="약 이름·증상으로 검색 (예: 두통, 배아파)">
-                    <button class="shape-search-btn" onclick="showPage('shape-search')">⬠ 모양</button>
                 </div>
                 <div id="search-results"></div>
 
                 <div class="main-buttons">
-                    <div class="main-btn-left" onclick="openCamera()">
+                    <div class="main-btn-left" onclick="showPage('identify-select')">
                         <img src="/static/img/camera_button.png" alt="알약 식별">
                     </div>
                     <div class="main-btn-right">
                         <div onclick="openUpload()">
                             <img src="/static/img/upload_button.png" alt="사진 업로드">
                         </div>
-                        <div onclick="document.getElementById('ocr-input').click()">
-                            <img src="/static/img/prescription_button.png" alt="처방전 스캔">
+                        <div onclick="showPage('shape-search')">
+                            <img src="/static/img/prescription_button.png" alt="모양으로 찾기">
                         </div>
                     </div>
                 </div>
@@ -66,30 +65,16 @@
                 </div>
 
                 <div class="folder-tabs">
-                    <div class="folder-tab active" onclick="switchFolder(0, this)">안전정보</div>
+                    <div class="folder-tab active" onclick="switchFolder(0, this)">건강식품</div>
                     <div class="folder-tab" onclick="switchFolder(1, this)">추천정보</div>
                     <div class="folder-tab" onclick="switchFolder(2, this)">복용팁</div>
                 </div>
                 <div class="folder-content">
                     <div class="folder-panel active" id="folder-0">
-                        <div class="warning-card">
-                            <span class="warning-badge">Warning</span>
-                            <span class="warning-text">[약 A]와 [약 B]는 병용금기입니다. 확인하세요.</span>
-                        </div>
-                        <div class="warning-card">
-                            <span class="warning-badge">Warning</span>
-                            <span class="warning-text">[약 C]는 공복에 복용하세요.</span>
-                        </div>
+                        <div id="supplement-grid" class="supplement-grid"></div>
                     </div>
                     <div class="folder-panel" id="folder-1">
-                        <div class="info-card">
-                            <span class="info-badge">💰</span>
-                            <span class="info-text">가성비 대체약이 있을 수 있습니다. AI 약사에게 상담해보세요.</span>
-                        </div>
-                        <div class="info-card">
-                            <span class="info-badge">📋</span>
-                            <span class="info-text">제네릭 의약품은 같은 성분으로 가격이 30~70% 저렴합니다.</span>
-                        </div>
+                        <div id="recommend-cards"></div>
                     </div>
                     <div class="folder-panel" id="folder-2">
                         <div class="info-card">
@@ -106,6 +91,27 @@
 
             <input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none">
             <input type="file" id="upload-input" accept="image/*" style="display:none">
+        </div>
+
+        <!-- ===== 식별 선택 ===== -->
+        <div id="page-identify-select" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">💊 알약 식별하기</div>
+            <div class="identify-select-content">
+                <p class="identify-desc">식별 방법을 선택하세요</p>
+                <div class="identify-options">
+                    <div class="identify-option" onclick="openCamera()">
+                        <div class="identify-icon">📷</div>
+                        <div class="identify-label">알약</div>
+                        <div class="identify-sub">카메라로 알약을 촬영합니다</div>
+                    </div>
+                    <div class="identify-option" onclick="document.getElementById('ocr-input').click()">
+                        <div class="identify-icon">📋</div>
+                        <div class="identify-label">처방전</div>
+                        <div class="identify-sub">처방전 사진을 업로드합니다</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- ===== 웹캠 촬영 ===== -->
@@ -167,6 +173,26 @@
                     <button class="confirm-btn-cancel" onclick="closeConfirm()">취소</button>
                     <button class="confirm-btn-ok" id="confirm-ok-btn">확인</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- ===== 추천 칼럼 ===== -->
+        <div id="page-article" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header" id="article-header">건강 칼럼</div>
+            <div class="article-content" id="article-content"></div>
+        </div>
+
+        <!-- ===== 건강식품 상세 ===== -->
+        <div id="page-supplement-detail" class="page">
+            <img src="/static/img/fake_top.jpg" class="status-bar" alt="">
+            <div class="page-header">
+                <img id="sup-detail-thumb" src="" style="width:28px;height:28px;border-radius:6px;vertical-align:middle;margin-right:8px;">
+                <span id="sup-detail-name">건강식품</span>
+                <span id="sup-detail-tag" style="font-size:11px;color:#4ECDC4;margin-left:8px;"></span>
+            </div>
+            <div style="padding:0 16px;overflow-y:auto;">
+                <img src="/static/img/supplement_detail.png" style="width:100%;border-radius:12px;margin-top:8px;" alt="상세정보">
             </div>
         </div>
 

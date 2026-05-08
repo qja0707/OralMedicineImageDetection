@@ -11,7 +11,7 @@ from PIL import Image
 import io
 
 BASE_DIR = Path(__file__).parent
-MODEL_PATH = BASE_DIR / "models" / "best.pt"
+MODELS_DIR = BASE_DIR / "models"
 PILL_DB_PATH = BASE_DIR / "pill_info.json"
 CONFIDENCE = 0.40
 
@@ -26,13 +26,23 @@ if PILL_DB_PATH.exists():
 
 # 모델
 model = None
-def load_model():
-    global model
-    if MODEL_PATH.exists():
+current_model_name = ""
+
+def load_model(name="best.pt"):
+    global model, current_model_name
+    path = MODELS_DIR / name
+    if path.exists():
         from ultralytics import YOLO
-        model = YOLO(str(MODEL_PATH))
+        model = YOLO(str(path))
         dummy = np.zeros((640, 480, 3), dtype=np.uint8)
         model(dummy, imgsz=640, conf=0.99, verbose=False)
+        current_model_name = name
+
+def get_model_list():
+    if not MODELS_DIR.exists():
+        return []
+    return sorted([f.name for f in MODELS_DIR.iterdir() if f.suffix == ".pt"])
+
 load_model()
 
 
@@ -95,24 +105,26 @@ async def detect(file: UploadFile = File(...)):
     from PIL import ImageDraw, ImageFont
     annotated_pil = Image.fromarray(img_array)
     draw = ImageDraw.Draw(annotated_pil)
+    FONT_SIZE = 20
     try:
-        font = ImageFont.truetype("malgunbd.ttf", 40)
+        font = ImageFont.truetype("malgunbd.ttf", FONT_SIZE)
     except OSError:
         try:
-            font = ImageFont.truetype("/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf", 40)
+            font = ImageFont.truetype("/usr/share/fonts/truetype/nanum/NanumGothicBold.ttf", FONT_SIZE)
         except OSError:
             try:
-                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 36)
+                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", FONT_SIZE)
             except OSError:
                 font = ImageFont.load_default()
 
+    label_h = FONT_SIZE + 10
     for det in detections:
         x1, y1, x2, y2 = det["bbox"]
         name = det["name"]
-        draw.rectangle([x1, y1, x2, y2], outline="#4ECDC4", width=5)
-        tw = draw.textlength(name, font=font) if hasattr(draw, 'textlength') else len(name) * 22
-        draw.rectangle([x1, y1 - 52, x1 + tw + 16, y1], fill="white", outline="#4ECDC4", width=2)
-        draw.text((x1 + 8, y1 - 50), name, fill="#2D3436", font=font)
+        draw.rectangle([x1, y1, x2, y2], outline="#4ECDC4", width=3)
+        tw = draw.textlength(name, font=font) if hasattr(draw, 'textlength') else len(name) * 12
+        draw.rectangle([x1, y1 - label_h, x1 + tw + 12, y1], fill="white", outline="#4ECDC4", width=2)
+        draw.text((x1 + 6, y1 - label_h + 3), name, fill="#2D3436", font=font)
 
     import base64
     buf = io.BytesIO()
@@ -129,6 +141,27 @@ async def detect(file: UploadFile = File(...)):
 @app.get("/api/health")
 async def health():
     return {"status": "ok", "model_loaded": model is not None, "pills": len(pill_db)}
+
+
+@app.get("/api/models")
+async def list_models():
+    models = get_model_list()
+    return JSONResponse({"models": models, "current": current_model_name})
+
+
+class ModelSwitch(BaseModel):
+    name: str
+
+@app.post("/api/models/switch")
+async def switch_model(req: ModelSwitch):
+    path = MODELS_DIR / req.name
+    if not path.exists() or path.suffix != ".pt":
+        return JSONResponse({"error": "모델을 찾을 수 없습니다"}, status_code=404)
+    try:
+        load_model(req.name)
+        return JSONResponse({"success": True, "current": current_model_name})
+    except Exception as e:
+        return JSONResponse({"error": f"모델 로드 실패: {str(e)[:80]}"}, status_code=500)
 
 
 # 처방전 OCR
@@ -215,6 +248,8 @@ async def chat(req: ChatRequest):
         system_prompt += "\n6. 대화를 이어가며 환자의 상태를 파악합니다. 한 번에 끝내지 않습니다."
         system_prompt += "\n7. 답변 마지막에 항상 후속 질문을 합니다."
         system_prompt += "\n8. 약 이름을 언급할 때는 반드시 **약이름** 형태로 볼드 표시합니다. (예: **마그밀정**, **타이레놀정**)"
+        system_prompt += "\n9. 상담 중 증상에 맞는 건강기능식품도 자연스럽게 추천합니다. 고혈압→코큐텐/홍국, 당뇨→바나바잎/여주, 간→밀크시슬, 위장→프로바이오틱스/매스틱, 알레르기→퀘르세틴, 임산부→프리나탈. 예: '참고로 **코큐텐**도 혈압 관리에 도움이 됩니다. 홈 화면 건강식품 탭에서 확인해보세요!' 처럼 대화 끝에 슬쩍 언급합니다."
+        system_prompt += "\n10. 건강기능식품 추천 시 너무 강하게 권하지 말고 '참고로', '혹시 관심 있으시면', '도움이 될 수 있는' 같은 부드러운 표현을 사용합니다."
 
         if req.user_name:
             system_prompt += f"\n\n환자 이름: {req.user_name}. 이름을 불러주세요."
