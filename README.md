@@ -43,7 +43,7 @@ AI 모델을 활용하여 경구약제 객체를 탐지하는 프로젝트입니
 
 
 ## 결과
-추후 작성 예정
+[실험 결과 발표 자료 (구글 드라이브 pptx 링크)](https://docs.google.com/presentation/d/1zW4YW0RosbBya93x8W2j4Cvdx--5rHYa/edit?usp=drive_link&ouid=105730000715568357010&rtpof=true&sd=true)
 
 ## 디렉터리 구조
 
