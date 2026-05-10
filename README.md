@@ -31,8 +31,19 @@ AI 모델을 활용하여 경구약제 객체를 탐지하는 프로젝트입니
 | Interface Lead | 이진호 |
 | Data Engineer/Model Architect | 하태진, 박규범 |
 
+## 협업일지
+| 이름 | 링크 |
+| --- | --- |
+| 안은남 | |
+| 박재철 | [프로젝트 협업 일지 (Notion)](https://www.notion.so/AI-306e0612b7858026b2d8feda8935f195) |
+| 이진호 | |
+| 하태진 | |
+| 박규범 |[프로젝트 협업 일지](members/gyubeom/daily_report) |
+
+
+
 ## 결과
-추후 작성 예정
+[실험 결과 발표 자료 (구글 드라이브 pptx 링크)](https://docs.google.com/presentation/d/1zW4YW0RosbBya93x8W2j4Cvdx--5rHYa/edit?usp=drive_link&ouid=105730000715568357010&rtpof=true&sd=true)
 
 ## 디렉터리 구조
 
