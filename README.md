@@ -37,7 +37,7 @@ AI 모델을 활용하여 경구약제 객체를 탐지하는 프로젝트입니
 | 안은남 | [프로젝트 협업 일지 (Notion)](https://www.notion.so/35a7dd05367b80fe8895d0f88dcb5229?v=35a7dd05367b80b185ef000c133539ec) |
 | 박재철 | [프로젝트 협업 일지 (Notion)](https://www.notion.so/AI-306e0612b7858026b2d8feda8935f195) |
 | 이진호 | [프로젝트 협업 일지 (Notion)](https://www.notion.so/Daily-35dee56cc45a807ba809dbd673bc0eb9) |
-| 하태진 | |
+| 하태진 | [프로젝트 협업 일지 (Notion)](https://www.notion.so/AI-35a2deb5db8180938cbbe816f4781d6e?source=copy_link) |
 | 박규범 |[프로젝트 협업 일지](members/gyubeom/daily_report) |
 
 
