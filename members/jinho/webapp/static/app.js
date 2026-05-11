@@ -1619,7 +1619,7 @@ function showPillFromChat(catId) {
     showPillDetail(info, catId);
 }
 
-function addChatBubble(text, type) {
+function addChatBubble(text, type, supplements) {
     const container = document.getElementById('chat-messages');
     const row = document.createElement('div');
     row.className = 'chat-row ' + type;
@@ -1639,6 +1639,24 @@ function addChatBubble(text, type) {
         bubble.textContent = text;
     }
     row.appendChild(bubble);
+
+    if (type === 'bot' && supplements && supplements.length > 0) {
+        const supWrap = document.createElement('div');
+        supWrap.className = 'chat-sup-wrap';
+        supWrap.innerHTML = '<div class="chat-sup-label">💊 바로 구입 가능한 건강기능식품</div>';
+        const cards = document.createElement('div');
+        cards.className = 'chat-sup-cards';
+        supplements.forEach(s => {
+            cards.innerHTML += `
+                <div class="chat-sup-card" onclick="openSupplementDetail('${s.name}', '${s.tag}', '${s.img}')">
+                    <img src="${s.img}" alt="${s.name}">
+                    <div class="chat-sup-name">${s.name}</div>
+                    <div class="chat-sup-tag">${s.tag}</div>
+                </div>`;
+        });
+        supWrap.appendChild(cards);
+        row.appendChild(supWrap);
+    }
 
     container.appendChild(row);
     container.scrollTop = container.scrollHeight;
@@ -1663,7 +1681,7 @@ function restoreChatBubbles() {
     if (currentPharmacist) {
         addChatBubble(currentPharmacist.greeting, 'bot');
     }
-    chatHistory.forEach(h => addChatBubble(h.text, h.type));
+    chatHistory.forEach(h => addChatBubble(h.text, h.type, h.supplements));
 }
 
 async function sendChat() {
@@ -1706,8 +1724,8 @@ async function sendChat() {
         });
         const data = await res.json();
         loadingBubble.remove();
-        addChatBubble(data.reply, 'bot');
-        chatHistory.push({ type: 'bot', text: data.reply });
+        addChatBubble(data.reply, 'bot', data.supplements || []);
+        chatHistory.push({ type: 'bot', text: data.reply, supplements: data.supplements || [] });
         saveChatHistory();
     } catch (err) {
         loadingBubble.remove();

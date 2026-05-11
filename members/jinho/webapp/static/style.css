@@ -1186,6 +1186,7 @@ body {
     display: flex;
     gap: 8px;
     align-items: flex-start;
+    flex-wrap: wrap;
 }
 .chat-row.bot { align-self: flex-start; max-width: 85%; }
 .chat-row.user { align-self: flex-end; max-width: 85%; }
@@ -1259,6 +1260,36 @@ body {
 @keyframes typingDot {
     0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
     30% { opacity: 1; transform: translateY(-4px); }
+}
+
+/* ── 채팅 건기식 카드 ── */
+.chat-sup-wrap {
+    margin-top: 8px; flex-basis: 100%; margin-left: 40px;
+}
+.chat-sup-label {
+    font-size: 11px; font-weight: 700; color: #4ECDC4;
+    margin-bottom: 6px; padding-left: 4px;
+}
+.chat-sup-cards {
+    display: flex; gap: 8px; overflow-x: auto;
+    padding-bottom: 4px;
+}
+.chat-sup-card {
+    flex-shrink: 0; width: 80px; background: #f7f6f2;
+    border-radius: 10px; overflow: hidden; cursor: pointer;
+    transition: transform 0.2s; text-align: center;
+}
+.chat-sup-card:active { transform: scale(0.95); }
+.chat-sup-card img {
+    width: 80px; height: 80px; object-fit: cover;
+}
+.chat-sup-name {
+    font-size: 10px; font-weight: 600; color: #2d3436;
+    padding: 4px 4px 0; white-space: nowrap; overflow: hidden;
+    text-overflow: ellipsis;
+}
+.chat-sup-tag {
+    font-size: 8px; color: #4ECDC4; padding: 0 4px 6px;
 }
 
 /* ── 웹캠 ── */

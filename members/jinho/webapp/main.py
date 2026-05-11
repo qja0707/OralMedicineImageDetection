@@ -272,7 +272,38 @@ async def chat(req: ChatRequest):
             config={"temperature": 0.7, "max_output_tokens": 4096, "thinking_config": {"thinking_budget": 0}},
         )
 
-        return JSONResponse({"reply": response.text.strip()})
+        reply_text = response.text.strip()
+
+        SUPPLEMENT_MAP = {
+            "코큐텐": {"name": "코큐텐", "tag": "심장·혈압 건강", "img": "/static/img/supplements/코큐텐.png"},
+            "홍국": {"name": "홍국", "tag": "콜레스테롤 관리", "img": "/static/img/supplements/홍국.png"},
+            "은행잎": {"name": "은행잎 추출물", "tag": "혈행 개선", "img": "/static/img/supplements/은행잎.png"},
+            "바나바": {"name": "바나바잎", "tag": "혈당 관리", "img": "/static/img/supplements/바나바.png"},
+            "여주": {"name": "여주 추출물", "tag": "천연 인슐린", "img": "/static/img/supplements/여주.png"},
+            "상엽": {"name": "상엽 추출물", "tag": "식후 혈당 조절", "img": "/static/img/supplements/상엽.png"},
+            "밀크시슬": {"name": "밀크시슬", "tag": "간세포 보호", "img": "/static/img/supplements/밀크시슬.png"},
+            "밀크씨슬": {"name": "밀크시슬", "tag": "간세포 보호", "img": "/static/img/supplements/밀크시슬.png"},
+            "씨슬파워": {"name": "씨슬파워", "tag": "간 해독 강화", "img": "/static/img/supplements/씨슬파워.png"},
+            "민들레": {"name": "민들레 추출물", "tag": "간 기능 개선", "img": "/static/img/supplements/민들레엑스.png"},
+            "키드니포뮬러": {"name": "키드니포뮬러", "tag": "신장 기능 보호", "img": "/static/img/supplements/키드니포믈러.png"},
+            "네틀포스": {"name": "네틀포스", "tag": "이뇨·신장 건강", "img": "/static/img/supplements/네틀포스.png"},
+            "코디세핀": {"name": "코디세핀", "tag": "신장 세포 보호", "img": "/static/img/supplements/코디세핀.png"},
+            "프로바이오틱스": {"name": "프로바이오틱스", "tag": "장내 유익균", "img": "/static/img/supplements/프로바이오틱스.png"},
+            "매스틱": {"name": "매스틱", "tag": "위점막 보호", "img": "/static/img/supplements/매스틱.png"},
+            "퀘르세틴": {"name": "퀘르세틴", "tag": "항히스타민 효과", "img": "/static/img/supplements/퀘르세틴.png"},
+            "프리나탈": {"name": "프리나탈", "tag": "엽산·철분 복합", "img": "/static/img/supplements/프리나탈.png"},
+            "멀티비타민": {"name": "멀티비타민", "tag": "종합 영양 보충", "img": "/static/img/supplements/멀티비타민.png"},
+            "헛깨": {"name": "헛깨 추출물", "tag": "간 건강·숙취", "img": "/static/img/supplements/헛깨.png"},
+        }
+
+        matched_supplements = []
+        seen = set()
+        for keyword, info in SUPPLEMENT_MAP.items():
+            if keyword in reply_text and info["name"] not in seen:
+                matched_supplements.append(info)
+                seen.add(info["name"])
+
+        return JSONResponse({"reply": reply_text, "supplements": matched_supplements})
 
     except Exception as e:
-        return JSONResponse({"reply": f"죄송합니다. 현재 상담이 어렵습니다. ({str(e)[:50]})"}, status_code=200)
+        return JSONResponse({"reply": f"죄송합니다. 현재 상담이 어렵습니다. ({str(e)[:50]})", "supplements": []}, status_code=200)
